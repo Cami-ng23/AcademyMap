@@ -3,6 +3,7 @@ from flask import Flask, render_template
 from extensions import db
 from models.liceo import Liceo
 from models.usuario import Usuario
+from config import Config
 
 # Importación de las rutas (Blueprints)
 from routes.liceos import liceos
@@ -13,12 +14,8 @@ from routes.auth import auth
 def create_app():
     app = Flask(__name__)
     
-    # CONFIGURACIÓN DE LA BASE DE DATOS RECONCILIADA
-    # Apunta directamente a tu carpeta 'database' y al archivo 'academy.db'
-    base_dir = os.path.abspath(os.path.dirname(__file__))
-    app.config["SQLALCHEMY_DATABASE_URI"] = f"sqlite:///{os.path.join(base_dir, 'database', 'academy.db')}"
-    app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
-    app.config["SECRET_KEY"] = "clave_secreta_academymap_2026"
+    # Carga la configuración centralizada
+    app.config.from_object(Config)
 
     # Enlazar la instancia única de SQLAlchemy con esta aplicación Flask
     db.init_app(app)
@@ -31,14 +28,14 @@ def create_app():
 
     @app.route("/")
     def inicio():
-        return render_template("inicio.html")
+        return render_template("index.html")
 
     # Forzar el contexto de la aplicación de manera segura
     with app.app_context():
-        # Crea la nueva tabla de 'usuarios' dentro de tu academy.db actual sin borrar los liceos que ya tienes
+        # Crea las tablas necesarias si no existen
         db.create_all()
         
-        # 1. Cargar Usuario Administrador por defecto si la tabla está vacía
+        # Cargar Usuario Administrador por defecto si la tabla está vacía
         if Usuario.query.count() == 0:
             admin_usuario = Usuario(username="admin")
             admin_usuario.set_password("admin123")
@@ -46,7 +43,7 @@ def create_app():
             db.session.commit()
             print("¡Usuario administrador inicial creado con éxito! (admin / admin123)")
 
-        # 2. Cargar Liceos base solo si tu tabla existente estuviera completamente vacía
+        # Cargar Liceos base solo si la tabla estuviera vacía
         if Liceo.query.count() == 0:
             datos_iniciales = [
                 Liceo(
@@ -76,7 +73,7 @@ def create_app():
             ]
             db.session.bulk_save_objects(datos_iniciales)
             db.session.commit()
-            print("¡Liceos base insertados de respaldo con éxito!")
+            print("¡Liceos base insertados con éxito!")
 
     return app
 
