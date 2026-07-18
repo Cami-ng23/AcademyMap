@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Explorar Liceos - AcademyMap{% endblock %}
+
+{% block contenido %}
+<!-- Sección Hero del Buscador -->
+<div class="bg-gradient-hero text-center py-5 mb-5 text-white">
+    <div class="container py-3">
+        <span class="badge bg-white text-primary mb-2 px-3 py-2 rounded-pill fw-semibold text-uppercase tracking-wide">Feria TP 2026</span>
+        <h1 class="display-5 fw-extrabold mb-3 text-dark-blue">Encuentra el liceo que mejor se adapta a tu futuro</h1>
+        <p class="lead text-secondary max-w-2xl mx-auto">Explora la oferta de establecimientos técnico-profesionales con filtros inteligentes por zona y área de interés.</p>
+    </div>
+</div>
+
+<!-- Contenedor Principal de Filtros e Interfaz -->
+<div class="container mb-5">
+    
+    <!-- Formulario de Búsqueda Avanzada -->
+    <div class="card border-0 shadow-lg p-4 mb-5 card-filters bg-white rounded-4">
+        <form method="GET" action="{{ url_for('liceos.lista') }}" class="row g-3 align-items-end">
+            <!-- Input Buscar por Nombre -->
+            <div class="col-12 col-md-4">
+                <label for="buscar" class="form-label fw-semibold text-dark mb-2">🔍 ¿Buscas un liceo en específico?</label>
+                <input type="text" class="form-control rounded-pill px-3 py-2" id="buscar" name="buscar" placeholder="Ej. Liceo Industrial..." value="{{ buscar }}">
+            </div>
+
+            <!-- Selector de Comunas Obligatorias -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <label for="comuna" class="form-label fw-semibold text-dark mb-2">📍 Selecciona una comuna</label>
+                <select class="form-select rounded-pill py-2" id="comuna" name="comuna">
+                    <option value="">Todas las comunas</option>
+                    {% for c in comunas %}
+                        <option value="{{ c }}" {% if c == comuna_sel %}selected{% endif %}>{{ c }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Selector de Especialidades -->
+            <div class="col-12 col-sm-6 col-md-3">
+                <label for="especialidad" class="form-label fw-semibold text-dark mb-2">💼 Área o Especialidad</label>
+                <select class="form-select rounded-pill py-2" id="especialidad" name="especialidad">
+                    <option value="">Todas las especialidades</option>
+                    {% for esp in especialidades %}
+                        <option value="{{ esp }}" {% if esp == specialty_sel %}selected{% endif %}>{{ esp }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <!-- Botones del Formulario -->
+            <div class="col-12 col-md-2 d-grid gap-2 d-flex">
+                <button type="submit" class="btn btn-primary-custom rounded-pill w-100 py-2 fw-semibold">
+                    Filtrar
+                </button>
+                {% if buscar or comuna_sel or specialty_sel %}
+                    <a href="{{ url_for('liceos.lista') }}" class="btn btn-light rounded-pill px-3 py-2 border" title="Limpiar Filtros">
+                        <i class="bi bi-x-lg"></i>
+                    </a>
+                {% endif %}
+            </div>
+        </form>
+    </div>
+
+    <!-- Resultados e Inyección de Tarjetas -->
+    <div class="row">
+        <div class="col-12 mb-4 d-flex justify-content-between align-items-center">
+            <h3 class="fw-bold text-dark-blue mb-0">Resultados disponibles</h3>
+            <span class="text-muted fw-medium">{{ liceos|length }} liceos encontrados</span>
+        </div>
+
+        {% if liceos %}
+            <!-- Grilla Dinámica -->
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                {% for liceo in liceos %}
+                    {% include "components/card_liceo.html" %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- Estado Vacío (Empty State UX) -->
+            <div class="col-12 text-center py-5 mt-4">
+                <div class="mb-3 text-muted display-1"><i class="bi bi-search-heart"></i></div>
+                <h4 class="fw-bold text-dark">No encontramos liceos con esos filtros</h4>
+                <p class="text-secondary">Intenta cambiando la comuna, el nombre o limpiando los filtros activos.</p>
+                <p class="small text-warning-custom bg-warning-light d-inline-block px-3 py-1 rounded-pill mt-2">
+                    ⚠️ Mostrando información de demostración regulada para el alcance de la feria.
+                </p>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

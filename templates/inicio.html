@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - AcademyMap{% endblock %}
+
+{% block contenido %}
+<!-- SECCIÓN HERO PRINCIPAL (Aireada y Moderna) -->
+<div class="container section-spacing">
+    <div class="row align-items-center g-5">
+        <div class="col-lg-6">
+            <span class="badge bg-primary bg-opacity-10 text-primary px-3 py-2 rounded-pill fw-bold small mb-3">
+                <i class="bi bi-stars me-1"></i> Orientación Técnico-Profesional 2026
+            </span>
+            <h1 class="display-4 fw-black text-dark-blue lh-sm mb-4" style="letter-spacing: -0.04em;">
+                Descubre tu futuro técnico en <span class="text-indigo" style="color: var(--brand-indigo);">AcademyMap</span>
+            </h1>
+            <p class="text-muted fs-5 mb-5 pe-lg-4 lh-base">
+                Explora el catálogo completo de liceos comerciales, industriales y polivalentes de tu zona. Encuentra la especialidad ideal para ti y da el primer paso hacia tu desarrollo profesional.
+            </p>
+            <div class="d-flex flex-wrap gap-3">
+                <a href="{{ url_for('liceos.lista') }}" class="btn-indigo-pill text-decoration-none px-4 py-3">
+                    <i class="bi bi-search me-1"></i> Buscar Liceos
+                </a>
+                <a href="{{ url_for('quiz.index') }}" class="btn-premium-outline btn-lg fs-6 px-4 py-3 text-decoration-none d-inline-flex align-items-center gap-2" style="border-radius: var(--radius-pill);">
+                    <i class="bi bi-clipboard2-check text-primary"></i> Realizar Test Vocacional
+                </a>
+            </div>
+        </div>
+        
+        <!-- Elemento Visual Decorativo -->
+        <div class="col-lg-6 d-none d-lg-block">
+            <div class="card-premium-global p-5 text-center bg-white shadow-lg border-0 position-relative overflow-hidden">
+                <div class="position-absolute top-0 start-0 w-100 h-100 bg-primary bg-opacity-10" style="z-index: 1; transform: skewY(-6deg) translateY(-50%);"></div>
+                <div class="position-relative" style="z-index: 2;">
+                    <div class="bg-primary bg-opacity-10 text-primary rounded-circle mx-auto d-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                        <i class="bi bi-compass fs-1"></i>
+                    </div>
+                    <h3 class="fw-bold text-dark-blue mb-2">¿No sabes qué estudiar?</h3>
+                    <p class="text-muted small px-4 mb-4">Nuestro algoritmo te guiará sugiriéndote las mejores especialidades técnico-profesionales basadas en tus verdaderos intereses y habilidades.</p>
+                    <div class="border rounded-3 p-3 bg-light text-start mb-2 d-flex align-items-center gap-3">
+                        <i class="bi bi-laptop fs-3 text-primary"></i>
+                        <div>
+                            <h6 class="m-0 fw-bold text-dark">Área Tecnológica</h6>
+                            <span class="text-muted small">Programación, Conectividad y Redes</span>
+                        </div>
+                    </div>
+                    <div class="border rounded-3 p-3 bg-light text-start d-flex align-items-center gap-3">
+                        <i class="bi bi-tools fs-3 text-success"></i>
+                        <div>
+                            <h6 class="m-0 fw-bold text-dark">Área Industrial</h6>
+                            <span class="text-muted small">Mecánica Automotriz, Electricidad</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- SECCIÓN DE CARACTERÍSTICAS DEL PROYECTO -->
+<div class="bg-white border-top border-bottom py-5">
+    <div class="container py-4">
+        <div class="row g-4 text-center">
+            <div class="col-md-4">
+                <div class="p-3">
+                    <i class="bi bi-building-check fs-2 text-indigo mb-2 d-block"></i>
+                    <h5 class="fw-bold text-dark-blue">Información Oficial</h5>
+                    <p class="text-muted small m-0">Datos centralizados y actualizados de establecimientos TP de las comunas.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3">
+                    <i class="bi bi-patch-check fs-2 text-success mb-2 d-block"></i>
+                    <h5 class="fw-bold text-dark-blue">Filtros Inteligentes</h5>
+                    <p class="text-muted small m-0">Busca por comuna, tipo de jornada o especialidad técnica que te interese.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="p-3">
+                    <i class="bi bi-shield-check fs-2 text-primary mb-2 d-block"></i>
+                    <h5 class="fw-bold text-dark-blue">Panel Seguro</h5>
+                    <p class="text-muted small m-0">Administración blindada bajo capas modernas de seguridad y hashes criptográficos.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

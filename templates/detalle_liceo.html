@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+
+{% block title %}{{ liceo.nombre }} - AcademyMap{% endblock %}
+
+{% block contenido %}
+<div class="container py-5">
+    <!-- Botón Volver -->
+    <div class="mb-4">
+        <a href="{{ url_for('liceos.lista') }}" class="btn btn-light rounded-pill border shadow-sm px-4 btn-volver">
+            <i class="bi bi-arrow-left me-2"></i> Volver al explorador
+        </a>
+    </div>
+
+    <!-- Banner Principal Estilo Startup -->
+    <div class="card border-0 shadow-sm rounded-4 overflow-hidden mb-5">
+        <div class="row g-0 align-items-center">
+            <div class="col-lg-6 gray-placeholder-bg" style="min-height: 350px; max-height: 450px;">
+                {% if liceo.imagen %}
+                    <img src="{{ url_for('static', filename='img/' + liceo.imagen) }}" class="img-fluid w-100 h-100 object-fit-cover animate-fade-in" alt="{{ liceo.nombre }}">
+                {% else %}
+                    <div class="d-flex align-items-center justify-content-center h-100 text-muted">
+                        <i class="bi bi-building display-1"></i>
+                    </div>
+                {% endif %}
+            </div>
+            <div class="col-lg-6 p-4 p-md-5">
+                <span class="badge bg-primary bg-opacity-10 text-primary rounded-pill px-3 py-2 fw-semibold text-uppercase mb-3">
+                    📍 {{ liceo.comuna }}
+                </span>
+                <h1 class="display-6 fw-bold text-dark-blue mb-3">{{ liceo.nombre }}</h1>
+                
+                <div class="d-flex flex-wrap gap-2 mb-4">
+                    <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="bi bi-tag me-1"></i> {{ liceo.tipo }}</span>
+                    <span class="badge bg-light text-dark border px-3 py-2 rounded-pill"><i class="bi bi-clock me-1"></i> {{ liceo.jornada }}</span>
+                </div>
+
+                <p class="text-secondary mb-0 fw-medium">
+                    <i class="bi bi-geo-alt-fill text-danger me-2"></i> {{ liceo.direccion or 'Dirección de demostración' }}
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grid de Contenido Base -->
+    <div class="row g-4">
+        <!-- Columna Izquierda: Información Institucional -->
+        <div class="col-lg-8">
+            <!-- Sección Sobre el Establecimiento -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 mb-4 bg-white">
+                <h3 class="fw-bold text-dark-blue mb-4 pb-2 border-bottom"><i class="bi bi-journal-text me-2"></i> Sobre el Establecimiento</h3>
+                <p class="text-secondary lh-lg mb-0">
+                    {{ liceo.descripcion or 'Esta es una descripción de demostración regulada para la Feria TP 2026. El establecimiento cuenta con una amplia trayectoria formando técnicos profesionales competentes en el sector industrial, comercial y de servicios.' }}
+                </p>
+            </div>
+
+            <!-- Sección Especialidades Disponibles -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <h3 class="fw-bold text-dark-blue mb-4 pb-2 border-bottom"><i class="bi bi-mortarboard me-2"></i> Especialidades Técnicas</h3>
+                
+                <div class="row row-cols-1 row-cols-md-2 g-3">
+                    {% if liceo.especialidades %}
+                        {% for esp in liceo.especialidades.split(',') %}
+                            <div class="col">
+                                <div class="d-flex align-items-center p-3 rounded-3 border bg-light bg-opacity-50 item-especialidad">
+                                    <div class="icon-shape bg-primary text-white rounded-circle me-3 flex-shrink-0 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                    </div>
+                                    <span class="fw-semibold text-dark">{{ esp.strip() }}</span>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p class="text-muted">No hay especialidades registradas en este demo.</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- Columna Derecha: Canales de Contacto -->
+        <div class="col-lg-4">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white sticky-lg-top" style="top: 2rem; z-index: 10;">
+                <h4 class="fw-bold text-dark-blue mb-4"><i class="bi bi-telephone-inbound me-2"></i> Canales Oficiales</h4>
+                
+                <div class="mb-4">
+                    <label class="text-muted small d-block mb-1 fw-bold text-uppercase">Teléfono / Contacto</label>
+                    <div class="p-3 bg-light rounded-3 d-flex align-items-center">
+                        <i class="bi bi-telephone text-primary fs-4 me-3"></i>
+                        <span class="text-dark fw-medium">{{ liceo.contacto or '+56 2 2345 6789' }}</span>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <label class="text-muted small d-block mb-1 fw-bold text-uppercase">Sitio Web Oficial</label>
+                    {% if liceo.sitio_web %}
+                        <a href="{{ liceo.sitio_web }}" target="_blank" class="p-3 bg-light rounded-3 d-flex align-items-center text-decoration-none btn-sitio-web transition-all">
+                            <i class="bi bi-globe text-primary fs-4 me-3"></i>
+                            <span class="text-primary fw-semibold text-truncate">{{ liceo.sitio_web }}</span>
+                        </a>
+                    {% else %}
+                        <div class="p-3 bg-light rounded-3 d-flex align-items-center text-muted">
+                            <i class="bi bi-globe2 fs-4 me-3"></i>
+                            <span class="small">No registra sitio web oficial</span>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="p-3 bg-warning-light rounded-3 border-start border-warning border-3">
+                    <p class="small text-warning-custom mb-0">
+                        <strong>Nota de Feria:</strong> Si detectas datos desactualizados, puedes modificarlos desde el Panel de Administración.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

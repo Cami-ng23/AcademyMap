@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}{% if liceo %}Editar Liceo{% else %}Nuevo Liceo{% endif %} - AcademyMap{% endblock %}
+
+{% block contenido %}
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-9">
+            
+            <!-- Botón Volver -->
+            <div class="mb-4">
+                <a href="{{ url_for('admin.index') }}" class="btn btn-light rounded-pill border px-4 shadow-sm btn-volver">
+                    <i class="bi bi-arrow-left me-2"></i> Volver a Gestión
+                </a>
+            </div>
+
+            <!-- Formulario principal -->
+            <div class="card border-0 shadow-sm rounded-4 p-4 p-md-5 bg-white">
+                <h2 class="fw-black text-dark-blue mb-2">
+                    {% if liceo %}Modificar Establecimiento{% else %}Nuevo Establecimiento{% endif %}
+                </h2>
+                <p class="text-secondary mb-5">Completa los campos técnicos obligatorios para estructurar el perfil del liceo en el catálogo.</p>
+
+                <form method="POST">
+                    
+                    <div class="row g-4">
+                        <!-- Nombre del Liceo -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Nombre Completo del Liceo</label>
+                            <input type="text" name="nombre" class="form-control rounded-3 py-2.5" placeholder="Ej. Liceo Industrial Benjamín Franklin" value="{{ liceo.nombre if liceo else '' }}" required>
+                        </div>
+
+                        <!-- Comuna -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Comuna</label>
+                            <select name="comuna" class="form-select rounded-3 py-2.5" required>
+                                <option value="" disabled {% if not liceo %}selected{% endif %}>Selecciona una comuna</option>
+                                {% for c in ["La Cisterna", "San Ramón", "La Granja", "San Miguel", "El Bosque"] %}
+                                    <option value="{{ c }}" {% if liceo and liceo.comuna == c %}selected{% endif %}>{{ c }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Dirección</label>
+                            <input type="text" name="direccion" class="form-control rounded-3 py-2.5" placeholder="Ej. Av. Américo Vespucio 1234" value="{{ liceo.direccion if liceo else '' }}">
+                        </div>
+
+                        <!-- Tipo de Establecimiento -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Tipo de Dependencia</label>
+                            <select name="tipo" class="form-select rounded-3 py-2.5">
+                                <option value="Polivalente" {% if liceo and liceo.tipo == "Polivalente" %}selected{% endif %}>Polivalente</option>
+                                <option value="Técnico Profesional" {% if liceo and liceo.tipo == "Técnico Profesional" %}selected{% endif %}>Técnico Profesional</option>
+                                <option value="Industrial" {% if liceo and liceo.tipo == "Industrial" %}selected{% endif %}>Industrial</option>
+                            </select>
+                        </div>
+
+                        <!-- Jornada -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Jornada Escolar</label>
+                            <select name="jornada" class="form-select rounded-3 py-2.5">
+                                <option value="Completa Diurna" {% if liceo and liceo.jornada == "Completa Diurna" %}selected{% endif %}>Completa Diurna (JEC)</option>
+                                <option value="Vespertina" {% if liceo and liceo.jornada == "Vespertina" %}selected{% endif %}>Vespertina</option>
+                            </select>
+                        </div>
+
+                        <!-- Especialidades separadas por comas -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-dark small text-uppercase mb-1">Especialidades Técnicas</label>
+                            <span class="text-muted d-block small mb-2">Importante: Separa cada carrera por una coma ( , ) para alimentar de manera correcta el recomendador.</span>
+                            <input type="text" name="especialidades" class="form-control rounded-3 py-2.5" placeholder="Ej. Programación, Conectividad y Redes, Electricidad" value="{{ liceo.especialidades if liceo else '' }}" required>
+                        </div>
+
+                        <!-- Canales de contacto -->
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Teléfono de Contacto</label>
+                            <input type="text" name="contacto" class="form-control rounded-3 py-2.5" placeholder="Ej. +56 2 2345 6789" value="{{ liceo.contacto if liceo else '' }}">
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Sitio Web Oficial</label>
+                            <input type="url" name="sitio_web" class="form-control rounded-3 py-2.5" placeholder="Ej. https://www.liceo-demo.cl" value="{{ liceo.sitio_web if liceo else '' }}">
+                        </div>
+
+                        <!-- Imagen -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Nombre de Archivo de Imagen (Opcional)</label>
+                            <input type="text" name="imagen" class="form-control rounded-3 py-2.5" placeholder="Ej. liceo1.jpg (Debe estar guardado en static/img/)" value="{{ liceo.imagen if liceo else '' }}">
+                        </div>
+
+                        <!-- Descripción -->
+                        <div class="col-12">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Descripción Institucional</label>
+                            <textarea name="descripcion" class="form-control rounded-3 py-2.5" rows="4" placeholder="Describe brevemente la infraestructura, talleres y sellos institucionales del liceo...">{{ liceo.descripcion if liceo else '' }}</textarea>
+                        </div>
+                    </div>
+
+                    <!-- Botones de Envío -->
+                    <div class="d-flex justify-content-end gap-3 mt-5 border-top pt-4">
+                        <a href="{{ url_for('admin.index') }}" class="btn btn-light border rounded-pill px-4 py-2.5 fw-semibold text-secondary">Cancelar</a>
+                        <button type="submit" class="btn btn-primary-custom rounded-pill px-5 py-2.5 fw-bold shadow-sm">
+                            {% if liceo %}<i class="bi bi-save2-fill me-1"></i> Guardar Cambios{% else %}<i class="bi bi-cloud-arrow-up-fill me-1"></i> Registrar Liceo{% endif %}
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

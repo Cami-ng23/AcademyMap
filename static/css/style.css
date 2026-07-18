@@ -1,0 +1,171 @@
+/* ==========================================================
+   DISEÑO DE SISTEMA - ACADEMYMAP (Premium Tech)
+   ========================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
+:root {
+    /* Colores sofisticados */
+    --brand-indigo: #4f46e5;
+    --brand-indigo-light: #e0e7ff;
+    --brand-dark: #0f172a;       /* Slate 900 (Azul profundo casi negro) */
+    --brand-gray: #64748b;       /* Slate 500 (Gris limpio) */
+    --brand-light: #f8fafc;      /* Slate 52 (Fondo ultra limpio) */
+    --brand-surface: #ffffff;
+    
+    /* Espaciados y Bordes */
+    --radius-pill: 9999px;
+    --radius-custom: 16px;
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Base e Inyección de Fuentes */
+body {
+    background-color: var(--brand-light);
+    color: var(--brand-dark);
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    letter-spacing: -0.02em;
+    overflow-x: hidden;
+}
+
+/* ==========================================================
+   NAVBAR (Barra de Navegación Estilo Flotante)
+   ========================================================== */
+.navbar-custom {
+    background-color: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    padding: 1.2rem 0;
+    transition: var(--transition-smooth);
+}
+
+.navbar-brand-custom {
+    font-weight: 800;
+    color: var(--brand-dark) !important;
+    font-size: 1.35rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.nav-link-custom {
+    color: var(--brand-gray) !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.6rem 1.1rem !important;
+    border-radius: var(--radius-pill);
+    transition: var(--transition-smooth);
+}
+
+.nav-link-custom:hover {
+    color: var(--brand-dark) !important;
+    background-color: rgba(15, 23, 42, 0.04);
+}
+
+.nav-link-custom.active-page {
+    color: var(--brand-indigo) !important;
+    background-color: var(--brand-indigo-light);
+}
+
+/* ==========================================================
+   BOTONES E INTERFACES MODERNAS
+   ========================================================== */
+.btn-indigo-pill {
+    background-color: var(--brand-dark);
+    color: white;
+    font-weight: 700;
+    font-size: 0.9rem;
+    padding: 0.7rem 1.6rem;
+    border-radius: var(--radius-pill);
+    border: none;
+    transition: var(--transition-smooth);
+}
+
+.btn-indigo-pill:hover {
+    background-color: var(--brand-indigo);
+    color: white;
+    box-shadow: 0 10px 20px rgba(79, 70, 229, 0.15);
+    transform: translateY(-1px);
+}
+
+/* Separación y Estructura Aireada (Chao amontonamientos) */
+.section-spacing {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
+}
+
+.card-premium-global {
+    background-color: var(--brand-surface);
+    border: 1px solid #e2e8f0;
+    border-radius: var(--radius-custom);
+    padding: 2.5rem;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02), 0 2px 4px -1px rgba(0, 0, 0, 0.01);
+    transition: var(--transition-smooth);
+}
+
+.card-premium-global:hover {
+    box-shadow: 0 20px 25px -5px rgba(15, 23, 42, 0.04);
+    border-color: #cbd5e1;
+}
+
+/* ==========================================================
+   PIE DE PÁGINA (FOOTER)
+   ========================================================== */
+.footer-custom {
+    background-color: var(--brand-surface);
+    border-top: 1px solid #e2e8f0;
+    padding: 4rem 0 2rem 0;
+    margin-top: 8rem;
+    color: var(--brand-gray);
+    font-size: 0.95rem;
+}
+
+.footer-brand {
+    font-weight: 800;
+    color: var(--brand-dark);
+}
+
+/* ==========================================================
+   DISEÑO SIDEBAR ADMIN (Alineado con el estilo global)
+   ========================================================== */
+.admin-wrapper {
+    display: flex;
+    min-height: 100vh;
+}
+.admin-sidebar {
+    width: 280px;
+    background-color: var(--brand-dark);
+    color: #ffffff;
+    padding: 2.5rem 1.5rem;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    height: 100vh;
+    z-index: 100;
+}
+.admin-content {
+    margin-left: 280px;
+    padding: 4rem;
+    width: calc(100% - 280px);
+    background-color: var(--brand-light);
+}
+.sidebar-link {
+    color: #94a3b8;
+    text-decoration: none;
+    padding: 0.8rem 1.2rem;
+    border-radius: var(--radius-custom);
+    margin-bottom: 0.6rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: var(--transition-smooth);
+}
+.sidebar-link:hover, .sidebar-link.active {
+    background-color: rgba(255, 255, 255, 0.06);
+    color: #ffffff;
+}
+.sidebar-link.active {
+    background-color: var(--brand-indigo);
+}

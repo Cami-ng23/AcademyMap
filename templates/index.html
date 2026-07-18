@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block title %}
+AcademyMap
+{% endblock %}
+
+{% block contenido %}
+
+<section class="hero text-center">
+
+    <div class="container">
+
+        <h1>
+            Encuentra el liceo que mejor se adapta a tu futuro
+        </h1>
+
+        <p class="lead mt-4 mb-5">
+            Responde un test vocacional y descubre establecimientos
+            técnico-profesionales según tus intereses, ubicación y preferencias.
+        </p>
+
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+
+            <a href="/quiz" class="btn btn-primary btn-lg">
+                Comenzar Quiz
+            </a>
+
+            <a href="/liceos" class="btn btn-outline-primary btn-lg">
+                Explorar Liceos
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
