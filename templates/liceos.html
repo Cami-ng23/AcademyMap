@@ -1,0 +1,73 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Explora liceos técnico-profesionales en La Cisterna, San Ramón, La Granja, San Miguel y El Bosque. Filtra por comuna, área y tipo de enseñanza.{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+
+  <div class="mb-5">
+    <span class="am-hero-badge"><i class="bi bi-search"></i> Explorador</span>
+    <h1 class="am-section-title">Liceos técnico-profesionales</h1>
+    <p class="text-muted-soft">{{ liceos|length }} establecimiento{{ 's' if liceos|length != 1 }} encontrados en las comunas disponibles.</p>
+  </div>
+
+  <!-- Filtros -->
+  <form method="GET" class="am-card-soft p-4 mb-5">
+    <div class="row g-3 align-items-end">
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Comuna</label>
+        <select name="comuna" class="form-select rounded-3">
+          <option value="">Todas las comunas</option>
+          {% for c in comunas %}
+            <option value="{{ c }}" {{ 'selected' if filtro_comuna == c }}>{{ c }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-4">
+        <label class="form-label small fw-semibold">Área / Especialidad</label>
+        <select name="area" class="form-select rounded-3">
+          <option value="">Todas las áreas</option>
+          {% for id, info in areas.items() %}
+            <option value="{{ id }}" {{ 'selected' if filtro_area == id }}>{{ info.nombre }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <label class="form-label small fw-semibold">Tipo de enseñanza</label>
+        <select name="tipo" class="form-select rounded-3">
+          <option value="">Todos los tipos</option>
+          {% for t in tipos %}
+            <option value="{{ t }}" {{ 'selected' if filtro_tipo == t }}>{{ t }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-1">
+        <button type="submit" class="btn-am-primary w-100"><i class="bi bi-funnel"></i></button>
+      </div>
+    </div>
+    {% if filtro_comuna or filtro_area or filtro_tipo %}
+      <div class="mt-3">
+        <a href="{{ url_for('liceos.liceos') }}" class="small text-am-primary"><i class="bi bi-x-circle me-1"></i>Limpiar filtros</a>
+      </div>
+    {% endif %}
+  </form>
+
+  <!-- Resultados -->
+  {% if liceos %}
+  <div class="row g-4">
+    {% for liceo in liceos %}
+    <div class="col-md-6 col-lg-4">
+      {% include "components/school_card.html" %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="am-card p-5 text-center">
+    <i class="bi bi-emoji-frown fs-1 text-muted-soft mb-3 d-block"></i>
+    <p class="text-muted-soft mb-3">No encontramos liceos con esos filtros.</p>
+    <a href="{{ url_for('liceos.liceos') }}" class="btn-am-primary">Ver todos los liceos</a>
+  </div>
+  {% endif %}
+
+</section>
+{% endblock %}
