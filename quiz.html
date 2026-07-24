@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block meta_description %}{{ liceo.nombre }} — {{ liceo.comuna }}. Especialidades: {{ liceo.especialidades }}. Conoce su información académica, contacto y dirección.{% endblock %}
+
+{% block content %}
+{% set area_principal = liceo.lista_areas[0] if liceo.lista_areas else None %}
+{% set area_info = AREAS.get(area_principal) if area_principal else None %}
+
+<section class="py-5" style="background: linear-gradient(135deg, {{ area_info.color if area_info else '#4f46e5' }}, #1e1b3a);">
+  <div class="container py-4">
+    <a href="{{ url_for('liceos.liceos') }}" class="d-inline-flex align-items-center gap-1 mb-3" style="color: rgba(255,255,255,0.85);">
+      <i class="bi bi-arrow-left"></i> Volver al explorador
+    </a>
+    <div class="d-flex flex-wrap justify-content-between align-items-start gap-3">
+      <div>
+        <span class="badge rounded-pill mb-2" style="background: rgba(255,255,255,0.2); color:#fff;">
+          <i class="bi bi-geo-alt-fill me-1"></i>{{ liceo.comuna }}
+        </span>
+        <h1 style="color:#fff;">{{ liceo.nombre }}</h1>
+        <p style="color: rgba(255,255,255,0.85);"><i class="bi bi-signpost me-1"></i>{{ liceo.direccion }}</p>
+      </div>
+      <span class="badge rounded-pill fs-6 px-3 py-2 {{ 'bg-success' if liceo.verificado else 'bg-warning text-dark' }}">
+        {{ 'Información verificada' if liceo.verificado else 'Datos de demostración' }}
+      </span>
+    </div>
+  </div>
+</section>
+
+<section class="container py-5">
+  <div class="row g-5">
+    <div class="col-lg-8">
+
+      <div class="am-card p-4 p-md-5 mb-4">
+        <h4 class="mb-3"><i class="bi bi-info-circle text-am-primary me-2"></i>Historia y descripción</h4>
+        <p class="text-muted-soft">{{ liceo.descripcion }}</p>
+      </div>
+
+      <div class="am-card p-4 p-md-5 mb-4">
+        <h4 class="mb-3"><i class="bi bi-mortarboard text-am-primary me-2"></i>Especialidades</h4>
+        <div>
+          {% for esp in liceo.lista_especialidades %}
+            <span class="am-tag">{{ esp }}</span>
+          {% endfor %}
+        </div>
+      </div>
+
+      {% if liceo.lista_caracteristicas %}
+      <div class="am-card p-4 p-md-5">
+        <h4 class="mb-3"><i class="bi bi-patch-check text-am-primary me-2"></i>Características destacadas</h4>
+        <div class="row g-3">
+          {% for c in liceo.lista_caracteristicas %}
+          <div class="col-md-6 d-flex align-items-center gap-2">
+            <i class="bi bi-check-circle-fill text-success"></i>
+            <span class="small">{{ c }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+
+    </div>
+
+    <div class="col-lg-4">
+      <div class="am-card-soft p-4 sticky-top" style="top: 100px;">
+        <h5 class="mb-4">Información académica</h5>
+
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted-soft small">Calificación</span>
+          <span class="am-rating"><i class="bi bi-star-fill"></i> {{ liceo.rating }} / 5</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted-soft small">Matrícula aproximada</span>
+          <span class="fw-semibold">{{ liceo.matricula | miles }} estudiantes</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted-soft small">Tipo de dependencia</span>
+          <span class="fw-semibold">{{ liceo.tipo }}</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-3">
+          <span class="text-muted-soft small">Jornada</span>
+          <span class="fw-semibold">{{ liceo.jornada }}</span>
+        </div>
+        <div class="d-flex justify-content-between align-items-center mb-4">
+          <span class="text-muted-soft small">Costo</span>
+          <span class="fw-semibold">{{ 'Gratuito' if liceo.gratuito else 'Con arancel' }}</span>
+        </div>
+
+        <div class="mb-2">
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted-soft">Tasa de admisión</span><span class="fw-semibold">{{ liceo.admision_pct }}%</span>
+          </div>
+          <div class="am-quiz-progress"><div class="am-quiz-progress-bar" style="width: {{ liceo.admision_pct }}%;"></div></div>
+        </div>
+        <div class="mb-4">
+          <div class="d-flex justify-content-between small mb-1">
+            <span class="text-muted-soft">Empleabilidad estimada</span><span class="fw-semibold">{{ liceo.empleabilidad_pct }}%</span>
+          </div>
+          <div class="am-quiz-progress"><div class="am-quiz-progress-bar" style="width: {{ liceo.empleabilidad_pct }}%;"></div></div>
+        </div>
+
+        <hr>
+        <p class="small text-muted-soft mb-1"><i class="bi bi-telephone me-2"></i>{{ liceo.contacto }}</p>
+
+        <a href="{{ url_for('comparador.comparar', a=liceo.id) }}" class="btn-am-primary w-100 mt-3 d-inline-flex align-items-center justify-content-center gap-2">
+          <i class="bi bi-bar-chart-line"></i> Comparar este liceo
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

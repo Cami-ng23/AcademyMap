@@ -1,0 +1,35 @@
+{# Requiere una variable `liceo` en el contexto. Usa AREAS (inyectado globalmente). #}
+{% set area_principal = liceo.lista_areas[0] if liceo.lista_areas else None %}
+{% set area_info = AREAS.get(area_principal) if area_principal else None %}
+
+<div class="am-card h-100 d-flex flex-column">
+  <div class="am-school-header" style="background: linear-gradient(135deg, {{ area_info.color if area_info else '#4f46e5' }}, #1e1b3a);">
+    <span class="am-badge-comuna">{{ liceo.comuna }}</span>
+    <span class="am-badge-verificado {{ 'bg-success text-white' if liceo.verificado else 'bg-warning text-dark' }}">
+      {{ 'Verificado' if liceo.verificado else 'Demostración' }}
+    </span>
+    <i class="bi {{ area_info.icono if area_info else 'bi-mortarboard' }}"></i>
+  </div>
+
+  <div class="p-4 d-flex flex-column flex-grow-1">
+    <div class="d-flex justify-content-between align-items-start mb-2">
+      <h5 class="mb-0" style="max-width: 80%;">{{ liceo.nombre }}</h5>
+      <span class="am-rating"><i class="bi bi-star-fill"></i> {{ liceo.rating }}</span>
+    </div>
+    <p class="text-muted-soft small mb-3"><i class="bi bi-geo-alt me-1"></i>{{ liceo.direccion }}</p>
+
+    <div class="mb-3">
+      {% for esp in liceo.lista_especialidades[:3] %}
+        <span class="am-tag">{{ esp }}</span>
+      {% endfor %}
+      {% if liceo.lista_especialidades|length > 3 %}
+        <span class="am-tag">+{{ liceo.lista_especialidades|length - 3 }}</span>
+      {% endif %}
+    </div>
+
+    <div class="mt-auto d-flex justify-content-between align-items-center">
+      <span class="small text-muted-soft">{{ 'Gratuito' if liceo.gratuito else 'Con arancel' }} · {{ liceo.jornada }}</span>
+      <a href="{{ url_for('liceos.detalle_liceo', liceo_id=liceo.id) }}" class="btn-am-outline btn-sm">Ver más</a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<!-- ===================== HERO ===================== -->
+<section class="am-hero">
+  <div class="container">
+    <div class="row align-items-center g-5">
+      <div class="col-lg-6">
+        <span class="am-hero-badge fade-up"><i class="bi bi-stars"></i> Orientación vocacional gratuita</span>
+        <h1 class="fade-up">Encuentra el liceo que se adapta a <span class="text-am-primary">tu futuro</span></h1>
+        <p class="lead fade-up">
+          Responde un test vocacional y descubre establecimientos técnico-profesionales
+          según tus intereses, en La Cisterna, San Ramón, La Granja, San Miguel y El Bosque.
+        </p>
+        <div class="d-flex flex-wrap gap-3 mt-4 fade-up">
+          <a href="{{ url_for('quiz.quiz') }}" class="btn-am-primary d-inline-flex align-items-center gap-2">
+            <i class="bi bi-clipboard2-check"></i> Comenzar Quiz
+          </a>
+          <a href="{{ url_for('liceos.liceos') }}" class="btn-am-outline d-inline-flex align-items-center gap-2">
+            <i class="bi bi-search"></i> Explorar liceos
+          </a>
+        </div>
+        <div class="d-flex gap-4 mt-5 flex-wrap">
+          <div>
+            <div class="am-stat-number">{{ estadisticas.liceos }}</div>
+            <div class="text-muted-soft small">Liceos catalogados</div>
+          </div>
+          <div>
+            <div class="am-stat-number">{{ estadisticas.comunas }}</div>
+            <div class="text-muted-soft small">Comunas cubiertas</div>
+          </div>
+          <div>
+            <div class="am-stat-number">{{ estadisticas.especialidades }}</div>
+            <div class="text-muted-soft small">Especialidades técnicas</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="am-card-soft p-4 p-lg-5 fade-up">
+          <div class="d-flex align-items-center gap-3 mb-4">
+            <span class="am-icon-tile bg-am-primary"><i class="bi bi-map"></i></span>
+            <div>
+              <h5 class="mb-0">Cobertura actual</h5>
+              <span class="text-muted-soft small">Sur de Santiago</span>
+            </div>
+          </div>
+          <div class="row g-3">
+            {% for comuna in comunas %}
+            <div class="col-6">
+              <div class="d-flex align-items-center gap-2 p-3 rounded-3" style="background: var(--am-primary-light);">
+                <i class="bi bi-geo-alt-fill text-am-primary"></i>
+                <span class="fw-semibold small">{{ comuna }}</span>
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <p class="small text-muted-soft mt-3 mb-0">
+            Cobertura pequeña pero bien desarrollada: preferimos información completa
+            y confiable antes que expandir a más comunas de forma apresurada.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CÓMO FUNCIONA ===================== -->
+<section class="container py-5">
+  <div class="text-center mb-5">
+    <span class="am-hero-badge"><i class="bi bi-signpost-split"></i> Cómo funciona</span>
+    <h2 class="am-section-title">Tres pasos hacia tu liceo ideal</h2>
+    <p class="text-muted-soft">Sin complicaciones, pensado para estudiantes de 8° básico.</p>
+  </div>
+  <div class="row g-4">
+    <div class="col-md-4">
+      <div class="am-card p-4 h-100">
+        <span class="am-icon-tile bg-am-primary mb-3"><i class="bi bi-1-circle"></i></span>
+        <h5>Responde el test</h5>
+        <p class="text-muted-soft small mb-0">6 preguntas rápidas sobre tus intereses y habilidades. Sin respuestas incorrectas.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="am-card p-4 h-100">
+        <span class="am-icon-tile mb-3" style="background:#7c3aed;"><i class="bi bi-2-circle"></i></span>
+        <h5>Recibe recomendaciones</h5>
+        <p class="text-muted-soft small mb-0">Calculamos tus áreas vocacionales más afines y te mostramos los liceos con esa oferta.</p>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="am-card p-4 h-100">
+        <span class="am-icon-tile mb-3" style="background:#0ea5a4;"><i class="bi bi-3-circle"></i></span>
+        <h5>Compara y decide</h5>
+        <p class="text-muted-soft small mb-0">Explora perfiles completos y compara hasta 2 liceos lado a lado antes de postular.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== BENEFICIOS ===================== -->
+<section class="py-5" style="background: linear-gradient(180deg, #fff, var(--am-primary-light) 140%);">
+  <div class="container py-4">
+    <div class="text-center mb-5">
+      <span class="am-hero-badge"><i class="bi bi-award"></i> Beneficios</span>
+      <h2 class="am-section-title">Diseñado para decisiones informadas</h2>
+    </div>
+    <div class="row g-4">
+      {% set beneficios = [
+        ("bi-clock-history", "#4f46e5", "Rápido y gratuito", "El test toma menos de 3 minutos y no requiere registro."),
+        ("bi-geo-alt", "#0ea5a4", "Información local", "Datos reales de liceos técnico-profesionales de tu propia zona."),
+        ("bi-bar-chart-line", "#f59e0b", "Comparación objetiva", "Mira empleabilidad, admisión y especialidades una junto a la otra."),
+        ("bi-shield-check", "#ef4770", "Transparencia de datos", "Marcamos claramente qué información está verificada y cuál es de demostración."),
+      ] %}
+      {% for icono, color, titulo, texto in beneficios %}
+      <div class="col-md-6 col-lg-3">
+        <div class="am-card p-4 h-100">
+          <span class="am-icon-tile mb-3" style="background: {{ color }};"><i class="bi {{ icono }}"></i></span>
+          <h6 class="fw-bold">{{ titulo }}</h6>
+          <p class="text-muted-soft small mb-0">{{ texto }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CTA FINAL ===================== -->
+<section class="container py-5">
+  <div class="am-card-soft p-5 text-center" style="background: linear-gradient(135deg, var(--am-primary), #7c3aed); color: #fff; border: none;">
+    <h2 class="mb-3" style="color:#fff;">¿Listo para descubrir tu camino técnico-profesional?</h2>
+    <p class="mb-4" style="color: rgba(255,255,255,0.85); max-width: 520px; margin-inline:auto;">
+      En menos de 3 minutos tendrás una lista de liceos que realmente calzan contigo.
+    </p>
+    <a href="{{ url_for('quiz.quiz') }}" class="btn btn-light btn-lg rounded-3 fw-semibold px-4">
+      Comenzar test vocacional <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
+</section>
+
+{% endblock %}

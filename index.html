@@ -1,0 +1,45 @@
+<footer class="am-footer">
+  <div class="container">
+    <div class="row g-4 mb-4">
+      <div class="col-lg-4 col-6">
+        <a href="{{ url_for('main.index') }}" class="d-inline-flex align-items-center gap-2 mb-3 text-decoration-none">
+          <span class="am-logo-icon"><i class="bi bi-compass"></i></span>
+          <span class="font-display fw-bold fs-5 text-white">AcademyMap</span>
+        </a>
+        <p class="small" style="max-width: 280px;">
+          Orientación vocacional para estudiantes de 8° básico que buscan su liceo
+          técnico-profesional ideal en el sur de Santiago.
+        </p>
+      </div>
+      <div class="col-lg-2 col-6">
+        <h6>Plataforma</h6>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><a href="{{ url_for('quiz.quiz') }}">Test vocacional</a></li>
+          <li class="mb-2"><a href="{{ url_for('liceos.liceos') }}">Explorar liceos</a></li>
+          <li class="mb-2"><a href="{{ url_for('comparador.comparar') }}">Comparador</a></li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-6">
+        <h6>Comunas disponibles</h6>
+        <ul class="list-unstyled small">
+          <li class="mb-2">La Cisterna</li>
+          <li class="mb-2">San Ramón · La Granja</li>
+          <li class="mb-2">San Miguel · El Bosque</li>
+        </ul>
+      </div>
+      <div class="col-lg-3 col-6">
+        <h6>Proyecto</h6>
+        <ul class="list-unstyled small">
+          <li class="mb-2"><a href="{{ url_for('main.index') }}">Sobre AcademyMap</a></li>
+          <li class="mb-2"><a href="{{ url_for('admin.dashboard') }}">Panel administrador</a></li>
+          <li class="mb-2">Feria Técnico-Profesional 2026</li>
+        </ul>
+      </div>
+    </div>
+    <hr style="border-color: rgba(255,255,255,0.12);">
+    <div class="d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2 small pt-2">
+      <p class="mb-0">© 2026 AcademyMap. Proyecto educativo técnico-profesional.</p>
+      <p class="mb-0">Hecho con dedicación para la orientación vocacional en Chile.</p>
+    </div>
+  </div>
+</footer>

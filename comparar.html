@@ -1,0 +1,35 @@
+<header class="am-navbar">
+  <div class="am-navbar-inner">
+    <a href="{{ url_for('main.index') }}" class="am-logo">
+      <span class="am-logo-icon"><i class="bi bi-compass"></i></span>
+      Academy<span class="text-am-primary">Map</span>
+    </a>
+
+    <nav class="d-none d-md-flex align-items-center gap-1">
+      <a href="{{ url_for('main.index') }}" class="am-nav-link {{ 'active' if request.endpoint == 'main.index' }}">Inicio</a>
+      <a href="{{ url_for('quiz.quiz') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('quiz.') }}">Test</a>
+      <a href="{{ url_for('liceos.liceos') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('liceos.') }}">Liceos</a>
+      <a href="{{ url_for('comparador.comparar') }}" class="am-nav-link {{ 'active' if request.endpoint == 'comparador.comparar' }}">Comparar</a>
+      <a href="{{ url_for('admin.dashboard') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('admin.') }}">Panel</a>
+    </nav>
+
+    <div class="d-flex align-items-center gap-2">
+      <a href="{{ url_for('quiz.quiz') }}" class="btn-am-primary d-none d-sm-inline-flex align-items-center">
+        Iniciar test
+      </a>
+      <button id="am-menu-toggle" class="btn btn-light d-md-none rounded-3" aria-label="Abrir menú">
+        <i class="bi bi-list fs-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <div id="am-mobile-menu" class="d-none d-md-none">
+    <div class="mx-3 mt-2 p-2 rounded-4 shadow-sm" style="background: rgba(255,255,255,0.97);">
+      <a href="{{ url_for('main.index') }}" class="am-nav-link d-block mb-1">Inicio</a>
+      <a href="{{ url_for('quiz.quiz') }}" class="am-nav-link d-block mb-1">Test</a>
+      <a href="{{ url_for('liceos.liceos') }}" class="am-nav-link d-block mb-1">Liceos</a>
+      <a href="{{ url_for('comparador.comparar') }}" class="am-nav-link d-block mb-1">Comparar</a>
+      <a href="{{ url_for('admin.dashboard') }}" class="am-nav-link d-block">Panel administrador</a>
+    </div>
+  </div>
+</header>

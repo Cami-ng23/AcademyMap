@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-5">
+
+  <div class="text-center mb-5">
+    <span class="am-hero-badge"><i class="bi bi-stars"></i> Resultados</span>
+    <h1 class="am-section-title">Estas son tus áreas más afines</h1>
+    <p class="text-muted-soft">Según tus respuestas, calculamos las áreas técnico-profesionales que más van contigo.</p>
+  </div>
+
+  <!-- Áreas top -->
+  <div class="row g-4 mb-5 justify-content-center">
+    {% for area in top_areas %}
+    <div class="col-md-4">
+      <div class="am-card p-4 h-100 text-center">
+        <span class="am-icon-tile mx-auto mb-3" style="background: {{ area.color }};">
+          <i class="bi {{ area.icono }}"></i>
+        </span>
+        <h5 class="mb-1">{{ area.nombre }}</h5>
+        <p class="text-muted-soft small mb-0">{{ area.descripcion }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <hr class="my-5">
+
+  <div class="d-flex justify-content-between align-items-end mb-4 flex-wrap gap-2">
+    <div>
+      <h2 class="am-section-title mb-1">Liceos recomendados para ti</h2>
+      <p class="text-muted-soft mb-0">Basado en la coincidencia entre tus áreas y la oferta de especialidades.</p>
+    </div>
+    <a href="{{ url_for('quiz.quiz') }}" class="btn-am-outline"><i class="bi bi-arrow-repeat me-1"></i> Repetir test</a>
+  </div>
+
+  {% if recomendados %}
+  <div class="row g-4">
+    {% for liceo in recomendados %}
+    <div class="col-md-6 col-lg-4">
+      {% include "components/school_card.html" %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="am-card p-5 text-center">
+    <p class="text-muted-soft mb-3">Aún no tenemos liceos catalogados para esta combinación de áreas.</p>
+    <a href="{{ url_for('liceos.liceos') }}" class="btn-am-primary">Explorar todos los liceos</a>
+  </div>
+  {% endif %}
+
+  <div class="text-center mt-5">
+    <a href="{{ url_for('liceos.liceos') }}" class="btn-am-primary">
+      Ver todos los liceos <i class="bi bi-arrow-right ms-1"></i>
+    </a>
+  </div>
+</section>
+{% endblock %}

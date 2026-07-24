@@ -1,0 +1,363 @@
+/* =========================================================================
+   AcademyMap — Hoja de estilos principal
+   Paleta: azul índigo (tecnología) + acentos cálidos por área vocacional.
+   ========================================================================= */
+
+:root {
+  --am-primary: #4f46e5;
+  --am-primary-dark: #4338ca;
+  --am-primary-light: #eef2ff;
+  --am-ink: #1e1b3a;
+  --am-ink-soft: #5b5876;
+  --am-bg: #fbfaff;
+  --am-card: #ffffff;
+  --am-border: #e6e4f5;
+  --am-success: #16a34a;
+  --am-radius-sm: 10px;
+  --am-radius-md: 16px;
+  --am-radius-lg: 24px;
+  --am-shadow-soft: 0 4px 20px rgba(79, 70, 229, 0.08);
+  --am-shadow-float: 0 12px 40px rgba(30, 27, 58, 0.12);
+  --font-display: "Poppins", "Inter", sans-serif;
+  --font-body: "Inter", sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--am-ink);
+  background-color: var(--am-bg);
+  padding-top: 84px;
+  overflow-x: hidden;
+}
+
+h1, h2, h3, h4, .font-display {
+  font-family: var(--font-display);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+
+a { text-decoration: none; }
+
+.text-muted-soft { color: var(--am-ink-soft); }
+
+.bg-am-primary { background-color: var(--am-primary); }
+.text-am-primary { color: var(--am-primary); }
+
+/* ---------------------------------------------------------------------- */
+/* Navbar flotante estilo "glass"                                         */
+/* ---------------------------------------------------------------------- */
+.am-navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  padding: 14px 0;
+  transition: all 0.25s ease;
+}
+
+.am-navbar-inner {
+  max-width: 1180px;
+  margin: 0 auto;
+  padding: 10px 18px;
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(0px);
+  transition: all 0.25s ease;
+}
+
+.am-navbar.scrolled .am-navbar-inner {
+  background: rgba(255, 255, 255, 0.92);
+  backdrop-filter: blur(14px);
+  box-shadow: var(--am-shadow-float);
+}
+
+.am-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.15rem;
+  color: var(--am-ink);
+}
+
+.am-logo-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--am-primary), #7c3aed);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  font-size: 1.1rem;
+  box-shadow: 0 6px 16px rgba(79, 70, 229, 0.35);
+}
+
+.am-nav-link {
+  padding: 8px 14px;
+  border-radius: 10px;
+  font-weight: 500;
+  font-size: 0.92rem;
+  color: var(--am-ink-soft);
+}
+
+.am-nav-link:hover { background: var(--am-primary-light); color: var(--am-primary); }
+.am-nav-link.active { background: var(--am-primary-light); color: var(--am-primary); font-weight: 600; }
+
+.btn-am-primary {
+  background: var(--am-primary);
+  color: #fff;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  box-shadow: 0 6px 18px rgba(79, 70, 229, 0.3);
+  transition: all 0.2s ease;
+}
+.btn-am-primary:hover { background: var(--am-primary-dark); color: #fff; transform: translateY(-1px); box-shadow: 0 10px 24px rgba(79, 70, 229, 0.4); }
+
+.btn-am-outline {
+  background: #fff;
+  border: 1.5px solid var(--am-border);
+  border-radius: 12px;
+  padding: 10px 20px;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--am-ink);
+  transition: all 0.2s ease;
+}
+.btn-am-outline:hover { border-color: var(--am-primary); color: var(--am-primary); }
+
+/* ---------------------------------------------------------------------- */
+/* Hero                                                                    */
+/* ---------------------------------------------------------------------- */
+.am-hero {
+  padding: 64px 0 88px;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(124, 58, 237, 0.10), transparent 45%),
+    radial-gradient(circle at 85% 10%, rgba(79, 70, 229, 0.12), transparent 40%);
+}
+
+.am-hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--am-primary-light);
+  color: var(--am-primary);
+  border-radius: 999px;
+  padding: 6px 16px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  margin-bottom: 22px;
+}
+
+.am-hero h1 {
+  font-size: clamp(2.1rem, 4.2vw, 3.4rem);
+  line-height: 1.12;
+  margin-bottom: 20px;
+}
+
+.am-hero p.lead {
+  color: var(--am-ink-soft);
+  font-size: 1.12rem;
+  max-width: 560px;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Tarjetas                                                                */
+/* ---------------------------------------------------------------------- */
+.am-card {
+  background: var(--am-card);
+  border: 1px solid var(--am-border);
+  border-radius: var(--am-radius-md);
+  transition: all 0.25s ease;
+}
+
+.am-card:hover {
+  box-shadow: var(--am-shadow-float);
+  transform: translateY(-3px);
+  border-color: rgba(79, 70, 229, 0.25);
+}
+
+.am-card-soft {
+  background: var(--am-card);
+  border: 1px solid var(--am-border);
+  border-radius: var(--am-radius-lg);
+  box-shadow: var(--am-shadow-soft);
+}
+
+.am-icon-tile {
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+/* Encabezado ilustrado de tarjeta de liceo (reemplaza fotografías) */
+.am-school-header {
+  height: 132px;
+  border-radius: var(--am-radius-md) var(--am-radius-md) 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.6rem;
+  color: rgba(255, 255, 255, 0.92);
+  position: relative;
+  overflow: hidden;
+}
+.am-school-header::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 80% -10%, rgba(255,255,255,0.35), transparent 55%);
+}
+
+.am-badge-comuna {
+  background: rgba(255, 255, 255, 0.92);
+  color: var(--am-ink);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  position: absolute;
+  top: 12px;
+  left: 12px;
+}
+
+.am-badge-verificado {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 0.7rem;
+  font-weight: 700;
+}
+
+.am-rating {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-weight: 700;
+  font-size: 0.88rem;
+  color: #b45309;
+}
+
+.am-tag {
+  display: inline-block;
+  background: var(--am-primary-light);
+  color: var(--am-primary-dark);
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  margin: 0 6px 6px 0;
+}
+
+/* ---------------------------------------------------------------------- */
+/* Quiz                                                                    */
+/* ---------------------------------------------------------------------- */
+.am-quiz-progress {
+  height: 8px;
+  border-radius: 999px;
+  background: var(--am-border);
+  overflow: hidden;
+}
+.am-quiz-progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--am-primary), #7c3aed);
+  transition: width 0.35s ease;
+}
+
+.am-quiz-step { display: none; }
+.am-quiz-step.active { display: block; animation: am-fade-in 0.35s ease; }
+
+@keyframes am-fade-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.am-option {
+  display: block;
+  width: 100%;
+  text-align: left;
+  border: 1.5px solid var(--am-border);
+  border-radius: var(--am-radius-md);
+  padding: 18px 20px;
+  margin-bottom: 12px;
+  background: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1.02rem;
+  transition: all 0.18s ease;
+}
+.am-option:hover { border-color: var(--am-primary); background: var(--am-primary-light); }
+.am-option.selected {
+  border-color: var(--am-primary);
+  background: var(--am-primary-light);
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.15);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Comparador                                                              */
+/* ---------------------------------------------------------------------- */
+.am-compare-table th, .am-compare-table td {
+  vertical-align: middle;
+  padding: 14px 16px;
+}
+.am-compare-table thead th {
+  background: var(--am-primary-light);
+  color: var(--am-ink);
+  font-family: var(--font-display);
+}
+
+/* ---------------------------------------------------------------------- */
+/* Footer                                                                  */
+/* ---------------------------------------------------------------------- */
+.am-footer {
+  background: #16142a;
+  color: #b9b6d6;
+  padding: 56px 0 24px;
+  margin-top: 90px;
+}
+.am-footer a { color: #d8d6f0; }
+.am-footer a:hover { color: #fff; }
+.am-footer h6 { color: #fff; font-family: var(--font-display); margin-bottom: 16px; }
+
+/* ---------------------------------------------------------------------- */
+/* Utilidades responsive                                                   */
+/* ---------------------------------------------------------------------- */
+@media (max-width: 767px) {
+  body { padding-top: 78px; }
+  .am-hero { padding: 40px 0 56px; text-align: center; }
+  .am-hero p.lead { margin-left: auto; margin-right: auto; }
+}
+
+.am-section-title {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  margin-bottom: 12px;
+}
+
+.am-stat-number {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  font-weight: 800;
+  color: var(--am-primary);
+}
+
+.fade-up {
+  animation: am-fade-in 0.5s ease both;
+}
