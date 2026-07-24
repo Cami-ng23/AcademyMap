@@ -7,7 +7,11 @@ Todos los registros están marcados "verificado": True: nombre, comuna,
 dirección y especialidades provienen de fuentes públicas (sitios
 institucionales de cada liceo, directorio PACE-UMCE, Ministerio de
 Educación / findmyschool.cl / boletinoficial.cl / grandescolegios.cl),
-consultadas en julio de 2026.
+consultadas en julio de 2026. Las especialidades de cada liceo fueron
+verificadas contra el sitio institucional MÁS RECIENTE disponible (varios
+liceos actualizan su oferta de especialidades año a año); cuando el sitio
+oficial 2026 estaba disponible, se priorizó sobre fuentes de directorios
+de 2021-2022 que en algunos casos mostraban especialidades descontinuadas.
 
 Este catálogo busca reunir la totalidad de liceos técnico-profesionales
 identificables mediante fuentes públicas en cada comuna. No existe un
@@ -50,14 +54,14 @@ LICEOS_SEED = [
         "comuna": "La Cisterna",
         "direccion": "Avenida El Parrón #1741, La Cisterna",
         "descripcion": (
-            "Con más de 60 años de trayectoria (RBD 9784-5), es uno de los liceos "
-            "técnico-profesionales con mayor variedad de especialidades del sur "
-            "de Santiago, sostenido por la Corporación Educacional Técnico "
-            "Industrial La Cisterna. Matrícula oficial: 302 estudiantes."
+            "Con más de 60 años de trayectoria (RBD 9784-5), forma Técnicos de "
+            "Nivel Medio en el área Industrial, con foco en dos especialidades "
+            "acreditadas según su sitio institucional (actualizado 2026). "
+            "Matrícula oficial: 302 estudiantes."
         ),
-        "especialidades": "Mecánica Automotriz,Electricidad,Electrónica,Atención de Párvulos,Telecomunicaciones,Conectividad de Redes,Enfermería,Gastronomía",
-        "areas": "industrial,electricidad,tecnologia,parvulos,salud,gastronomia",
-        "caracteristicas": "Más de 60 años de trayectoria,8 especialidades técnico-profesionales,100% gratuito,Sostenedor sin fines de lucro",
+        "especialidades": "Mecánica Automotriz,Electricidad",
+        "areas": "industrial,electricidad",
+        "caracteristicas": "Más de 60 años de trayectoria,100% gratuito,Sostenedor sin fines de lucro",
         "tipo": "Particular Subvencionado",
         "jornada": "Diurna",
         "imagen": "",
@@ -173,14 +177,14 @@ LICEOS_SEED = [
         "comuna": "San Ramón",
         "direccion": "Doñihue #2030, San Ramón",
         "descripcion": (
-            "Liceo técnico-profesional del área Tecnológica y Comercial de la "
-            "comuna de San Ramón (RBD 9584), parte de la red de establecimientos "
-            "PACE en convenio con la Universidad Metropolitana de Ciencias de la "
-            "Educación, orientado a la diversidad, inclusión y empleabilidad."
+            "Liceo técnico-profesional de la Fundación Educacional COMEDUC (RBD "
+            "9584), parte de la red de establecimientos PACE en convenio con la "
+            "Universidad Metropolitana de Ciencias de la Educación. Desde 2026 "
+            "ofrece 4 especialidades profesionales, incorporando Programación."
         ),
-        "especialidades": "Administración,Contabilidad",
+        "especialidades": "Administración mención Recursos Humanos,Administración mención Logística,Contabilidad,Programación",
         "areas": "administracion,tecnologia",
-        "caracteristicas": "Convenio PACE-UMCE,Enfoque en inclusión y diversidad,Formación en competencias del siglo XXI",
+        "caracteristicas": "Convenio PACE-UMCE,Certificación internacional ISO 21001,4 especialidades profesionales",
         "tipo": "Municipal",
         "jornada": "Diurna",
         "imagen": "",
@@ -226,8 +230,8 @@ LICEOS_SEED = [
             "1998 se denomina Centro Educacional Purkuyén, con un sello de "
             "expresión artística, cultural y deportiva."
         ),
-        "especialidades": "Administración mención Logística",
-        "areas": "administracion",
+        "especialidades": "Administración,Atención de Enfermería",
+        "areas": "administracion,salud",
         "caracteristicas": "Tradición desde 1970,Sello de expresión artística y deportiva",
         "tipo": "Municipal",
         "jornada": "Diurna",
@@ -254,7 +258,7 @@ LICEOS_SEED = [
             "(Línea 2), pone énfasis en la Formación General y en la práctica "
             "profesional final."
         ),
-        "especialidades": "Servicio de Alimentación Colectiva,Vestuario y Confección Textil,Atención de Párvulos",
+        "especialidades": "Gastronomía mención Cocina,Vestuario y Confección Textil,Atención de Párvulos",
         "areas": "gastronomia,parvulos",
         "caracteristicas": "Acceso directo desde Metro Lo Vial,Talleres de confección textil,Práctica profesional final",
         "tipo": "Corporación de Administración Delegada",
@@ -298,14 +302,14 @@ LICEOS_SEED = [
         "direccion": "Álvarez de Toledo #1060, San Miguel",
         "descripcion": (
             "Liceo femenino fundado en 1960 como Instituto Comercial Femenino "
-            "N°4, funcionando en su dirección actual desde 1961. Amplió su "
-            "oferta en 2022 de 2 a 4 especialidades, incorporando el área de "
-            "salud junto a su tradicional formación comercial."
+            "N°4, funcionando en su dirección actual desde 1961. Parte de la "
+            "red Liceos UTEM (Corporación de Administración Delegada), ofrece "
+            "formación comercial y de salud a media cuadra del Metro San Miguel."
         ),
-        "especialidades": "Administración,Contabilidad,Atención de Enfermería,Atención de Párvulos",
-        "areas": "administracion,salud,parvulos",
-        "caracteristicas": "Más de 60 años de trayectoria,Áreas verdes en el campus,Alianza con Universidad Diego Portales",
-        "tipo": "Municipal",
+        "especialidades": "Administración,Contabilidad,Atención de Enfermería",
+        "areas": "administracion,salud",
+        "caracteristicas": "Más de 60 años de trayectoria,Parte de la red Liceos UTEM,Áreas verdes en el campus",
+        "tipo": "Corporación de Administración Delegada",
         "jornada": "Diurna",
         "imagen": "",
         "contacto": "Consultar en sitio institucional (insucochile.cl)",
@@ -350,18 +354,18 @@ LICEOS_SEED = [
         "direccion": "Avenida Santa Rosa #6740, La Granja",
         "descripcion": (
             "Liceo polivalente del Servicio Local de Educación Pública Gabriela "
-            "Mistral (RBD 9582), único establecimiento del sector (La Granja, "
+            "Mistral (RBD 9582-6), único establecimiento del sector (La Granja, "
             "San Joaquín y Macul) que imparte Construcciones Metálicas desde "
             "1986, junto a un Programa de Integración Escolar (PIE) con equipo "
             "multidisciplinario."
         ),
-        "especialidades": "Construcciones Metálicas,Contabilidad,Servicio de Alimentación Colectiva",
-        "areas": "construccion,administracion,gastronomia,industrial",
+        "especialidades": "Construcciones Metálicas,Gastronomía",
+        "areas": "construccion,gastronomia",
         "caracteristicas": "Única oferta de Construcciones Metálicas del sector,Programa de Integración Escolar (PIE),Alianzas con empresas e instituciones",
         "tipo": "Servicio Local de Educación",
         "jornada": "Diurna",
         "imagen": "",
-        "contacto": "+56 2 2511 1792",
+        "contacto": "+56 2 3669385",
         "gratuito": True,
         "matricula": 540,
         "rating": 3.8,
@@ -378,12 +382,12 @@ LICEOS_SEED = [
         "direccion": "Lo Martínez #923, El Bosque",
         "descripcion": (
             "Fundación educacional creada en 1981, técnico-profesional desde "
-            "1985. Nació con Contabilidad y Secretariado, Mecánica Automotriz y "
-            "Electricidad, y Vestuario y Confección Textil; hoy imparte "
-            "Administración y Mecánica Automotriz, cercano al Hospital El Pino."
+            "1985, parte de la Corporación San Isidoro. Entre los 10 mejores a "
+            "nivel comunal en SIMCE de Matemática 4° básico y Lectura II° medio, "
+            "cercano al Hospital El Pino."
         ),
-        "especialidades": "Administración mención RRHH,Contabilidad,Mecánica Automotriz",
-        "areas": "administracion,industrial",
+        "especialidades": "Administración,Contabilidad,Mecánica Automotriz,Gastronomía",
+        "areas": "administracion,industrial,gastronomia",
         "caracteristicas": "Programa de Integración Escolar (PIE),Más de 40 años de trayectoria,Cercano a Hospital El Pino",
         "tipo": "Particular Subvencionado",
         "jornada": "Diurna",
