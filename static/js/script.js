@@ -68,11 +68,15 @@ function initQuiz() {
   }
 
   // Selección de alternativa: resalta la opción y avanza automáticamente.
+  // IMPORTANTE: se escucha "change" en el input (no "click" en el label),
+  // porque un <label> que envuelve un <input> reenvía el clic de forma
+  // nativa hacia el input, disparando el evento dos veces si se escucha
+  // "click" en el label — eso hacía que el quiz saltara una pregunta sin
+  // responderla y luego marcara "faltan preguntas" por responder.
   quizForm.querySelectorAll(".am-quiz-step").forEach((paso) => {
-    paso.querySelectorAll(".am-option").forEach((opcion) => {
-      opcion.addEventListener("click", () => {
-        const input = opcion.querySelector('input[type="radio"]');
-        input.checked = true;
+    paso.querySelectorAll(".am-option-input").forEach((input) => {
+      input.addEventListener("change", () => {
+        const opcion = input.closest(".am-option");
 
         paso.querySelectorAll(".am-option").forEach((o) => o.classList.remove("selected"));
         opcion.classList.add("selected");

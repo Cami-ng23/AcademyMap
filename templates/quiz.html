@@ -3,7 +3,7 @@
 {% block meta_description %}Responde el test vocacional de AcademyMap y descubre qué liceo técnico-profesional se adapta mejor a tus intereses.{% endblock %}
 
 {% block content %}
-<section class="container py-5" style="max-width: 720px;">
+<section class="container py-5" style="max-width: 760px;">
 
   <div class="text-center mb-4">
     <span class="am-hero-badge"><i class="bi bi-clipboard2-check"></i> Test vocacional</span>
@@ -11,28 +11,35 @@
     <p class="text-muted-soft">Elige la opción que más se parezca a ti en cada pregunta. No hay respuestas incorrectas.</p>
   </div>
 
+  <!-- Puntos de progreso + barra -->
   <div class="mb-4">
     <div class="d-flex justify-content-between align-items-center mb-2">
       <span id="quiz-progress-label" class="small fw-semibold text-am-primary">Pregunta 1 de {{ preguntas|length }}</span>
+      <span class="small text-muted-soft"><i class="bi bi-clock me-1"></i>~3 min</span>
     </div>
     <div class="am-quiz-progress">
       <div id="quiz-progress-bar" class="am-quiz-progress-bar" style="width: {{ (100/preguntas|length)|round(0,'floor') }}%;"></div>
     </div>
   </div>
 
-  <form id="quiz-form" method="POST" action="{{ url_for('quiz.resultados') }}">
+  <form id="quiz-form" method="POST" action="{{ url_for('quiz.resultados') }}" novalidate>
     {% for pregunta in preguntas %}
-    <div class="am-quiz-step {{ 'active' if loop.first }}">
+    <div class="am-quiz-step {{ 'active' if loop.first }}" data-step="{{ loop.index0 }}">
       <div class="am-card-soft p-4 p-md-5">
-        <h3 class="mb-1">{{ pregunta.pregunta }}</h3>
+        <span class="am-quiz-step-badge">{{ loop.index }}</span>
+        <h3 class="mb-1 mt-2">{{ pregunta.pregunta }}</h3>
         <p class="text-muted-soft small mb-4">{{ pregunta.ayuda }}</p>
 
-        {% for opcion in pregunta.opciones %}
-        <label class="am-option">
-          <input type="radio" name="{{ pregunta.id }}" value="{{ loop.index0 }}" class="d-none" required>
-          {{ opcion.texto }}
-        </label>
-        {% endfor %}
+        <div class="am-option-grid">
+          {% for opcion in pregunta.opciones %}
+          <label class="am-option">
+            <input type="radio" name="{{ pregunta.id }}" value="{{ loop.index0 }}" class="am-option-input">
+            <span class="am-option-icon"><i class="bi {{ opcion.icono }}"></i></span>
+            <span class="am-option-text">{{ opcion.texto }}</span>
+            <span class="am-option-check"><i class="bi bi-check-circle-fill"></i></span>
+          </label>
+          {% endfor %}
+        </div>
       </div>
     </div>
     {% endfor %}
