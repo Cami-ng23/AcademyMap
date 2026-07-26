@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Metodología de AcademyMap: cómo se verificaron los datos de los liceos, qué comunas cubre y con qué tecnología está construido.{% endblock %}
+
+{% block content %}
+<section class="container py-5" style="max-width: 880px;">
+
+  <div class="mb-5">
+    <span class="am-hero-badge"><i class="bi bi-info-circle"></i> Sobre el proyecto</span>
+    <h1 class="am-section-title">Metodología y transparencia</h1>
+    <p class="text-muted-soft">
+      AcademyMap es un proyecto de orientación vocacional técnico-profesional para
+      estudiantes de 8° básico del sur de Santiago, desarrollado para una feria
+      técnico-profesional.
+    </p>
+  </div>
+
+  <div class="row g-3 mb-5">
+    <div class="col-4">
+      <div class="am-card p-4 text-center">
+        <div class="am-stat-number" style="font-size:2rem;">{{ estadisticas.liceos }}</div>
+        <div class="small text-muted-soft">Liceos catalogados</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="am-card p-4 text-center">
+        <div class="am-stat-number" style="font-size:2rem; color:#16a34a;">{{ estadisticas.verificados }}</div>
+        <div class="small text-muted-soft">Con datos verificados</div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div class="am-card p-4 text-center">
+        <div class="am-stat-number" style="font-size:2rem;">{{ estadisticas.comunas }}</div>
+        <div class="small text-muted-soft">Comunas cubiertas</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="am-card p-4 p-md-5 mb-4">
+    <h4 class="mb-3"><i class="bi bi-geo-alt text-am-primary me-2"></i>Alcance geográfico</h4>
+    <p class="text-muted-soft">
+      La primera versión de AcademyMap cubre intencionalmente solo 5 comunas del
+      sur de Santiago: {{ comunas|join(', ') }}. Se priorizó una cobertura pequeña
+      pero bien desarrollada — con información completa y organizada — antes que
+      expandir a más comunas de forma apresurada y con datos incompletos.
+    </p>
+  </div>
+
+  <div class="am-card p-4 p-md-5 mb-4">
+    <h4 class="mb-3"><i class="bi bi-patch-check text-am-primary me-2"></i>Verificación de datos</h4>
+    <p class="text-muted-soft">
+      El nombre, comuna, dirección y especialidades de cada liceo se contrastaron
+      contra su sitio institucional más reciente disponible, el directorio
+      PACE-UMCE, y fuentes del Ministerio de Educación. Cuando la única fuente
+      disponible era un directorio de 2021-2022, se priorizó cualquier fuente 2025-2026
+      encontrada, ya que la oferta de especialidades técnico-profesionales cambia
+      año a año.
+    </p>
+    <p class="text-muted-soft mb-0">
+      Cifras como calificación, tasa de admisión y empleabilidad estimada son
+      <strong>estimaciones referenciales</strong> (no existe un dato público
+      unificado para esto en Chile); la matrícula usa el número oficial cuando la
+      fuente lo entregó. Cada liceo puede editarse desde el panel administrador si
+      se detecta información desactualizada.
+    </p>
+  </div>
+
+  <div class="am-card p-4 p-md-5 mb-4">
+    <h4 class="mb-3"><i class="bi bi-diagram-3 text-am-primary me-2"></i>Cómo funciona la recomendación</h4>
+    <p class="text-muted-soft mb-0">
+      El test vocacional no usa inteligencia artificial externa: cada respuesta
+      suma puntos a una o más de 8 áreas vocacionales, y los liceos se recomiendan
+      según la coincidencia entre esas áreas y su oferta de especialidades. La
+      lógica vive aislada en <code>services/recommendation.py</code>, lista para
+      reemplazarse por un modelo más sofisticado sin tocar el resto de la
+      aplicación.
+    </p>
+  </div>
+
+  <div class="am-card p-4 p-md-5">
+    <h4 class="mb-3"><i class="bi bi-code-slash text-am-primary me-2"></i>Stack técnico</h4>
+    <div class="row g-2">
+      {% for item in ["Python + Flask (Blueprints)", "SQLite (sqlite3 nativo, sin ORM externo)", "Jinja2 + Bootstrap 5", "JavaScript vanilla (sin frameworks)"] %}
+      <div class="col-md-6 d-flex align-items-center gap-2">
+        <i class="bi bi-check-circle-fill text-success"></i>
+        <span class="small">{{ item }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</section>
+{% endblock %}

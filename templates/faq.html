@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Preguntas frecuentes sobre AcademyMap: qué es la educación técnico-profesional, cómo funciona el test vocacional y cómo se eligen los liceos recomendados.{% endblock %}
+
+{% block content %}
+<section class="container py-5" style="max-width: 780px;">
+
+  <div class="text-center mb-5">
+    <span class="am-hero-badge"><i class="bi bi-question-circle"></i> FAQ</span>
+    <h1 class="am-section-title">Preguntas frecuentes</h1>
+    <p class="text-muted-soft">Todo lo que necesitas saber antes de usar AcademyMap.</p>
+  </div>
+
+  <div class="accordion" id="faqAccordion">
+    {% set preguntas = [
+      ("¿Qué es la educación técnico-profesional (TP)?", "Es una modalidad de enseñanza media que, además de los ramos generales, entrega un título de Técnico de Nivel Medio en una especialidad (por ejemplo Electricidad o Gastronomía), permitiendo trabajar apenas egresas o seguir estudios superiores."),
+      ("¿Cómo se calculan las recomendaciones del quiz?", "Cada una de las 10 preguntas que respondes suma puntos a distintas áreas vocacionales. Al final, sumamos tus puntajes y buscamos los liceos cuya oferta de especialidades coincide mejor con tus áreas más altas. No se usa inteligencia artificial externa, es una lógica simple y transparente."),
+      ("¿Por qué las preguntas cambian cada vez que hago el test?", "En cada intento se eligen 10 preguntas al azar desde un banco de 20, y el orden de las alternativas también se mezcla. Así el test no se siente repetitivo si lo respondes más de una vez, y puedes comparar resultados con un amigo que lo haya hecho distinto."),
+      ("¿De dónde salen los datos de los liceos?", "De fuentes públicas: los sitios institucionales de cada liceo, el directorio PACE-UMCE y bases del Ministerio de Educación, revisadas y priorizando siempre la fuente más reciente disponible. Puedes ver el detalle completo en la página \"Sobre el proyecto\"."),
+      ("¿Por qué solo aparecen 5 comunas?", "Elegimos cubrir bien 5 comunas del sur de Santiago (La Cisterna, San Ramón, La Granja, San Miguel y El Bosque) en vez de cubrir mal muchas. Es la primera versión del proyecto."),
+      ("¿Puedo comparar más de 2 liceos a la vez?", "Por ahora el comparador muestra 2 liceos lado a lado, pensado para decidir entre tus 2 finalistas. Puedes repetir la comparación las veces que quieras con distintos pares."),
+      ("Encontré un dato desactualizado de mi liceo, ¿qué hago?", "Puedes avisarle a la persona que administra esta versión de AcademyMap para que lo corrija desde el panel administrador, ya que cada especialidad y dato se puede editar directamente ahí."),
+    ] %}
+    {% for pregunta, respuesta in preguntas %}
+    <div class="accordion-item mb-3 border-0">
+      <h2 class="accordion-header">
+        <button class="accordion-button collapsed rounded-3 fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#faq{{ loop.index }}">
+          {{ pregunta }}
+        </button>
+      </h2>
+      <div id="faq{{ loop.index }}" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+        <div class="accordion-body text-muted-soft">
+          {{ respuesta }}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="am-card-soft p-4 text-center mt-5">
+    <p class="mb-3 text-muted-soft">¿Tu pregunta no está aquí?</p>
+    <a href="{{ url_for('quiz.quiz') }}" class="btn-am-primary">Comenzar el test vocacional</a>
+  </div>
+
+</section>
+{% endblock %}
