@@ -12,12 +12,14 @@ liceos_bp = Blueprint("liceos", __name__)
 
 @liceos_bp.route("/liceos")
 def liceos():
-    """Explorador con filtros por comuna, área/especialidad y tipo de enseñanza."""
+    """Explorador con búsqueda, filtros y ordenamiento."""
     comuna = request.args.get("comuna", "").strip()
     area = request.args.get("area", "").strip()
     tipo = request.args.get("tipo", "").strip()
+    busqueda = request.args.get("q", "").strip()
+    orden = request.args.get("orden", "rating_desc").strip()
 
-    resultados = liceo_repo.listar(comuna=comuna, area=area, tipo=tipo)
+    resultados = liceo_repo.listar(comuna=comuna, area=area, tipo=tipo, busqueda=busqueda, orden=orden)
     tipos_disponibles = liceo_repo.tipos_disponibles()
 
     return render_template(
@@ -30,6 +32,8 @@ def liceos():
         filtro_comuna=comuna,
         filtro_area=area,
         filtro_tipo=tipo,
+        filtro_busqueda=busqueda,
+        filtro_orden=orden,
     )
 
 

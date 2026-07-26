@@ -6,6 +6,18 @@
   <title>{{ title or "AcademyMap — Orientación técnico-profesional" }}</title>
   <meta name="description" content="{% block meta_description %}AcademyMap ayuda a estudiantes de La Cisterna, San Ramón, La Granja, San Miguel y El Bosque a encontrar el liceo técnico-profesional ideal según sus intereses vocacionales.{% endblock %}">
 
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+
+  <!-- Open Graph / redes sociales -->
+  <meta property="og:site_name" content="AcademyMap">
+  <meta property="og:title" content="{{ title or 'AcademyMap — Orientación técnico-profesional' }}">
+  <meta property="og:description" content="{% block og_description %}Encuentra el liceo técnico-profesional ideal en La Cisterna, San Ramón, La Granja, San Miguel y El Bosque.{% endblock %}">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="{{ request.url }}">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="{{ title or 'AcademyMap' }}">
+  <meta name="twitter:description" content="{% block twitter_description %}Encuentra el liceo técnico-profesional ideal según tus intereses vocacionales.{% endblock %}">
+
   <!-- Bootstrap 5 + Iconos -->
   <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">

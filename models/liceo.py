@@ -87,7 +87,14 @@ def contar() -> int:
     return fila["total"]
 
 
-def listar(comuna: str = "", area: str = "", tipo: str = "") -> List[Liceo]:
+_ORDENES_VALIDOS = {
+    "rating_desc": "rating DESC",
+    "nombre_asc": "nombre COLLATE NOCASE ASC",
+    "matricula_desc": "matricula DESC",
+}
+
+
+def listar(comuna: str = "", area: str = "", tipo: str = "", busqueda: str = "", orden: str = "rating_desc") -> List[Liceo]:
     sql = "SELECT * FROM liceos WHERE 1=1"
     params = []
 
@@ -100,8 +107,12 @@ def listar(comuna: str = "", area: str = "", tipo: str = "") -> List[Liceo]:
     if area:
         sql += " AND areas LIKE ?"
         params.append(f"%{area}%")
+    if busqueda:
+        sql += " AND (nombre LIKE ? OR especialidades LIKE ?)"
+        params.append(f"%{busqueda}%")
+        params.append(f"%{busqueda}%")
 
-    sql += " ORDER BY rating DESC"
+    sql += f" ORDER BY {_ORDENES_VALIDOS.get(orden, _ORDENES_VALIDOS['rating_desc'])}"
     filas = get_db().execute(sql, params).fetchall()
     return [Liceo.from_row(f) for f in filas]
 
