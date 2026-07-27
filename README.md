@@ -27,6 +27,22 @@ y vuelve a ejecutar `python app.py`.
 (Configurables mediante variables de entorno `ADMIN_USERNAME` / `ADMIN_PASSWORD`
 o editando `config.py`.)
 
+## Ejecutar las pruebas automatizadas
+
+El proyecto incluye una suite de pruebas con `unittest` (librería estándar
+de Python, no requiere instalar nada extra):
+
+```bash
+python -m unittest discover -s tests -v
+```
+
+Cada prueba usa una base de datos SQLite temporal, por lo que correr los
+tests nunca modifica `database/academymap.db`. Cubre: landing page, quiz
+(incluida la aleatoriedad de las preguntas y el flujo completo de envío),
+explorador con filtros/búsqueda/orden, comparador, perfil de liceo y 404,
+login y CRUD completo del panel administrador, resultados compartibles, y
+robots.txt / sitemap.xml.
+
 ## Arquitectura
 
 ```
@@ -34,32 +50,38 @@ AcademyMap/
 │  app.py                 → Punto de entrada, application factory
 │  config.py               → Configuración (BD, credenciales admin, comunas)
 │  requirements.txt
-│  seed_data.py             → Datos iniciales de liceos (reales + demostración)
+│  seed_data.py             → Datos iniciales de liceos (verificados)
 │
 ├─ database/
 │    db.py                 → Conexión sqlite3, esquema de tablas
 │
 ├─ models/
 │    liceo.py               → Dataclass Liceo + repositorio (única capa SQL)
+│    resultado.py            → Repositorio de resultados de quiz guardados/compartibles
 │
 ├─ routes/                  → Blueprints Flask (lógica separada de la vista)
-│    main.py                 → Landing page "/"
-│    quiz.py                 → Test vocacional "/quiz" y "/resultados"
-│    liceos.py                → Explorador "/liceos" y perfil "/liceo/<id>"
+│    main.py                 → Landing, "Sobre el proyecto", FAQ, robots.txt, sitemap.xml
+│    quiz.py                 → Test vocacional, resultados y links compartibles "/r/<id>"
+│    liceos.py                → Explorador (búsqueda/filtros/orden) y perfil "/liceo/<id>"
 │    comparador.py             → "/comparar"
 │    admin.py                  → Panel administrador y CRUD "/admin/*"
 │
 ├─ services/
-│    quiz_data.py             → Banco de preguntas + áreas vocacionales
+│    quiz_data.py             → Banco de 20 preguntas + áreas vocacionales
 │    recommendation.py         → Motor de recomendación (sin IA externa)
 │
 ├─ templates/                → Jinja2 (extienden base.html)
 │    components/               → navbar, footer, tarjeta de liceo reutilizable
 │    admin/                    → login, dashboard, formulario agregar/editar
+│    sobre_proyecto.html, faq.html
 │
-└─ static/
-     css/style.css            → Sistema de diseño (tarjetas, navbar "glass", quiz)
-     js/script.js              → Stepper del quiz, navbar scroll, comparador
+├─ static/
+│    css/style.css            → Sistema de diseño (tarjetas, navbar "glass", quiz, impresión)
+│    js/script.js              → Stepper del quiz, navbar scroll, comparador
+│    img/favicon.svg
+│
+└─ tests/
+     test_app.py               → Suite de pruebas con unittest (ver sección de arriba)
 ```
 
 ## Sobre los datos
