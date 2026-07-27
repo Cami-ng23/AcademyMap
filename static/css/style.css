@@ -435,3 +435,13 @@ a { text-decoration: none; }
 .fade-up {
   animation: am-fade-in 0.5s ease both;
 }
+
+/* ---------------------------------------------------------------------- */
+/* Impresión (comparador -> "Exportar a PDF" usa el diálogo nativo)       */
+/* ---------------------------------------------------------------------- */
+@media print {
+  .am-navbar, .am-footer, .no-print, #am-mobile-menu { display: none !important; }
+  body { padding-top: 0 !important; background: #fff !important; }
+  .am-compare-table { font-size: 11pt; }
+  a[href]::after { content: none !important; }
+}

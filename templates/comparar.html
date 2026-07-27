@@ -31,6 +31,11 @@
   </div>
 
   {% if liceo_a and liceo_b %}
+  <div class="d-flex justify-content-end mb-3 no-print">
+    <button type="button" onclick="window.print()" class="btn-am-outline btn-sm">
+      <i class="bi bi-printer me-1"></i> Imprimir / Exportar a PDF
+    </button>
+  </div>
   <div class="am-card p-0 overflow-hidden">
     <table class="table am-compare-table mb-0">
       <thead>
