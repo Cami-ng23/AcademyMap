@@ -30,6 +30,8 @@ class Liceo:
     admision_pct: int = 60
     empleabilidad_pct: int = 75
     verificado: bool = False
+    latitud: Optional[float] = None
+    longitud: Optional[float] = None
     id: Optional[int] = None
 
     # ---- Propiedades de conveniencia -------------------------------------
@@ -66,7 +68,13 @@ class Liceo:
             admision_pct=row["admision_pct"],
             empleabilidad_pct=row["empleabilidad_pct"],
             verificado=bool(row["verificado"]),
+            latitud=row["latitud"],
+            longitud=row["longitud"],
         )
+
+    @property
+    def tiene_ubicacion(self) -> bool:
+        return self.latitud is not None and self.longitud is not None
 
 
 # ============================================================================
@@ -79,6 +87,7 @@ _COLUMNAS = [
     "nombre", "comuna", "direccion", "descripcion", "especialidades", "areas",
     "caracteristicas", "tipo", "jornada", "imagen", "contacto", "gratuito",
     "matricula", "rating", "admision_pct", "empleabilidad_pct", "verificado",
+    "latitud", "longitud",
 ]
 
 
@@ -119,6 +128,14 @@ def listar(comuna: str = "", area: str = "", tipo: str = "", busqueda: str = "",
 
 def listar_todos() -> List[Liceo]:
     filas = get_db().execute("SELECT * FROM liceos ORDER BY comuna, nombre").fetchall()
+    return [Liceo.from_row(f) for f in filas]
+
+
+def listar_con_ubicacion() -> List[Liceo]:
+    """Liceos que tienen coordenadas cargadas, para pintar el mapa interactivo."""
+    filas = get_db().execute(
+        "SELECT * FROM liceos WHERE latitud IS NOT NULL AND longitud IS NOT NULL ORDER BY nombre"
+    ).fetchall()
     return [Liceo.from_row(f) for f in filas]
 
 

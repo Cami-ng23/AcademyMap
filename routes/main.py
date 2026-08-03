@@ -68,9 +68,11 @@ def sitemap_xml():
         url_for("main.index", _external=True),
         url_for("quiz.quiz", _external=True),
         url_for("liceos.liceos", _external=True),
+        url_for("liceos.mapa", _external=True),
         url_for("comparador.comparar", _external=True),
         url_for("main.sobre_proyecto", _external=True),
         url_for("main.faq", _external=True),
+        url_for("opiniones.opiniones", _external=True),
     ]
     urls_liceos = [
         url_for("liceos.detalle_liceo", liceo_id=l.id, _external=True)

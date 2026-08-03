@@ -104,6 +104,11 @@
         <a href="{{ url_for('comparador.comparar', a=liceo.id) }}" class="btn-am-primary w-100 mt-3 d-inline-flex align-items-center justify-content-center gap-2">
           <i class="bi bi-bar-chart-line"></i> Comparar este liceo
         </a>
+        {% if liceo.tiene_ubicacion %}
+        <a href="{{ url_for('liceos.mapa', liceo=liceo.id) }}" class="btn-am-outline w-100 mt-2 d-inline-flex align-items-center justify-content-center gap-2">
+          <i class="bi bi-map"></i> Ver en el mapa
+        </a>
+        {% endif %}
       </div>
     </div>
   </div>

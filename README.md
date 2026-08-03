@@ -27,6 +27,37 @@ y vuelve a ejecutar `python app.py`.
 (Configurables mediante variables de entorno `ADMIN_USERNAME` / `ADMIN_PASSWORD`
 o editando `config.py`.)
 
+## Opiniones anónimas con moderación por IA
+
+Cualquier visitante puede dejar una opinión anónima en `/opiniones` (no se
+guarda IP, nombre ni ningún dato identificable). Cada comentario pasa por
+un filtro antes de guardarse:
+
+- **Con IA (recomendado):** define la variable de entorno
+  `ANTHROPIC_API_KEY` con una clave de la API de Claude antes de correr
+  `python app.py`. Cada opinión se envía a Claude (`claude-haiku-4-5`) para
+  clasificarla como comentario genuino o como spam/broma/ofensivo antes de
+  guardarla.
+- **Sin IA (respaldo automático):** si no hay clave configurada, o la
+  llamada a la API falla (sin internet, etc.), se usa un filtro básico
+  (largo mínimo/máximo, lista de palabras prohibidas, detección de texto
+  repetitivo tipo spam). La sección de opiniones nunca queda bloqueada.
+
+```bash
+# Linux/Mac
+export ANTHROPIC_API_KEY="sk-ant-..."
+python app.py
+
+# Windows (PowerShell)
+$env:ANTHROPIC_API_KEY="sk-ant-..."
+python app.py
+```
+
+Las opiniones aprobadas se leen desde `/admin/opiniones` (requiere login).
+También se pueden auditar las rechazadas (`?estado=rechazada`) para
+revisar qué filtró el moderador. El panel avisa con un aviso amarillo si
+la IA no está configurada.
+
 ## Ejecutar las pruebas automatizadas
 
 El proyecto incluye una suite de pruebas con `unittest` (librería estándar
@@ -58,22 +89,25 @@ AcademyMap/
 ├─ models/
 │    liceo.py               → Dataclass Liceo + repositorio (única capa SQL)
 │    resultado.py            → Repositorio de resultados de quiz guardados/compartibles
+│    opinion.py               → Repositorio de opiniones anónimas moderadas
 │
 ├─ routes/                  → Blueprints Flask (lógica separada de la vista)
 │    main.py                 → Landing, "Sobre el proyecto", FAQ, robots.txt, sitemap.xml
 │    quiz.py                 → Test vocacional, resultados y links compartibles "/r/<id>"
-│    liceos.py                → Explorador (búsqueda/filtros/orden) y perfil "/liceo/<id>"
+│    liceos.py                → Explorador (búsqueda/filtros/orden), perfil "/liceo/<id>" y "/mapa"
 │    comparador.py             → "/comparar"
-│    admin.py                  → Panel administrador y CRUD "/admin/*"
+│    admin.py                  → Panel administrador, CRUD "/admin/*" y "/admin/opiniones"
+│    opiniones.py               → "/opiniones" (formulario público anónimo)
 │
 ├─ services/
 │    quiz_data.py             → Banco de 20 preguntas + áreas vocacionales
 │    recommendation.py         → Motor de recomendación (sin IA externa)
+│    moderacion.py              → Moderación de opiniones (Claude API + respaldo heurístico)
 │
 ├─ templates/                → Jinja2 (extienden base.html)
 │    components/               → navbar, footer, tarjeta de liceo reutilizable
-│    admin/                    → login, dashboard, formulario agregar/editar
-│    sobre_proyecto.html, faq.html
+│    admin/                    → login, dashboard, formulario agregar/editar, opiniones
+│    sobre_proyecto.html, faq.html, mapa.html, opiniones.html
 │
 ├─ static/
 │    css/style.css            → Sistema de diseño (tarjetas, navbar "glass", quiz, impresión)
@@ -115,6 +149,34 @@ fácilmente desde el panel administrador (`/admin/agregar`).
 El campo `verificado` del modelo `Liceo` y la insignia correspondiente en
 la interfaz se mantienen para que, si en el futuro se agrega un liceo sin
 confirmar, quede claramente diferenciado de los datos reales.
+
+## Mapa interactivo
+
+`/mapa` muestra todos los liceos con coordenadas cargadas en un mapa
+interactivo (Leaflet + tiles de OpenStreetMap, sin necesidad de API key).
+Cada liceo se agrega al mapa con un pin de color según su área vocacional
+principal; al hacer clic se abre un popup con especialidades y un link al
+perfil completo.
+
+**Desde el panel administrador**, al agregar o editar un liceo hay una
+sección "Ubicación en el mapa": se escribe la dirección (reutiliza el
+campo "Dirección" de arriba), se presiona "Buscar en el mapa" y el
+formulario geocodifica automáticamente esa dirección usando
+[Nominatim](https://nominatim.org/) (el buscador gratuito de
+OpenStreetMap) y deja caer un pin arrastrable para ajustar la ubicación
+exacta a mano si hace falta. Un liceo sin coordenadas simplemente no
+aparece en `/mapa` (pero sigue funcionando normal en el resto del sitio).
+
+Los 16 liceos del catálogo inicial (`seed_data.py`) traen coordenadas
+*aproximadas* (ubicadas en el sector correcto de su comuna, no
+geocodificadas desde su dirección exacta) para que el mapa no arranque
+vacío. Se recomienda abrir cada uno desde el panel administrador y usar
+"Buscar en el mapa" para afinar su ubicación real.
+
+> Tanto el mapa como la búsqueda de direcciones necesitan que el
+> **navegador** (no el servidor) tenga acceso a internet, ya que las
+> imágenes del mapa y la búsqueda de direcciones se piden directamente
+> desde el navegador de quien está usando la página.
 
 ## Base de datos
 

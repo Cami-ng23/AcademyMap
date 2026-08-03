@@ -1,8 +1,10 @@
 """
-Rutas del explorador de liceos: listado con filtros (/liceos) y
-perfil individual (/liceo/<id>).
+Rutas del explorador de liceos: listado con filtros (/liceos), perfil
+individual (/liceo/<id>) y mapa interactivo (/mapa).
 """
-from flask import Blueprint, render_template, request, abort, current_app
+import json
+
+from flask import Blueprint, render_template, request, abort, current_app, url_for
 
 from models import liceo as liceo_repo
 from services.quiz_data import AREAS
@@ -49,4 +51,38 @@ def detalle_liceo(liceo_id):
         title=f"{liceo.nombre} — AcademyMap",
         liceo=liceo,
         areas=AREAS,
+    )
+
+
+@liceos_bp.route("/mapa")
+def mapa():
+    """Mapa interactivo con todos los liceos que tienen coordenadas cargadas."""
+    liceos_geo = liceo_repo.listar_con_ubicacion()
+    total_liceos = liceo_repo.contar()
+
+    puntos = []
+    for l in liceos_geo:
+        area_principal = l.lista_areas[0] if l.lista_areas else None
+        area_info = AREAS.get(area_principal, {})
+        puntos.append({
+            "id": l.id,
+            "nombre": l.nombre,
+            "comuna": l.comuna,
+            "lat": l.latitud,
+            "lng": l.longitud,
+            "especialidades": l.lista_especialidades[:3],
+            "color": area_info.get("color", "#4f46e5"),
+            "icono": area_info.get("icono", "bi-mortarboard"),
+            "url": url_for("liceos.detalle_liceo", liceo_id=l.id),
+        })
+
+    liceo_centrado_id = request.args.get("liceo", type=int)
+
+    return render_template(
+        "mapa.html",
+        title="Mapa de liceos técnico-profesionales — AcademyMap",
+        puntos_json=json.dumps(puntos),
+        total_con_ubicacion=len(liceos_geo),
+        total_liceos=total_liceos,
+        liceo_centrado_id=liceo_centrado_id,
     )

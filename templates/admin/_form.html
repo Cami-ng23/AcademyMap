@@ -32,6 +32,23 @@
     </div>
 
     <div class="am-card p-4 mb-4">
+      <h6 class="fw-bold mb-1">Ubicación en el mapa</h6>
+      <p class="small text-muted-soft mb-3">
+        Escribe la dirección de arriba y presiona "Buscar en el mapa", o arrastra
+        el pin para ajustar la ubicación exacta.
+      </p>
+      <button type="button" id="btn-geocodificar" class="btn-am-outline btn-sm mb-3">
+        <i class="bi bi-geo-alt me-1"></i> Buscar en el mapa
+      </button>
+      <span id="geocodificar-estado" class="small text-muted-soft ms-2"></span>
+
+      <div id="mapa-admin" style="height: 320px; border-radius: 14px; overflow: hidden; border: 1px solid var(--am-border);"></div>
+
+      <input type="hidden" id="input-latitud" name="latitud" value="{{ liceo.latitud if liceo and liceo.latitud is not none else '' }}">
+      <input type="hidden" id="input-longitud" name="longitud" value="{{ liceo.longitud if liceo and liceo.longitud is not none else '' }}">
+    </div>
+
+    <div class="am-card p-4 mb-4">
       <h6 class="fw-bold mb-3">Oferta formativa</h6>
       <div class="mb-3">
         <label class="form-label small fw-semibold">Especialidades <span class="text-muted-soft fw-normal">(separadas por coma)</span></label>
@@ -128,3 +145,91 @@
     </button>
   </div>
 </div>
+
+<!-- Leaflet (mapa interactivo) + geocodificación de direcciones con Nominatim (OpenStreetMap) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  const SANTIAGO_SUR = [-33.535, -70.650]; // centro por defecto (sur de Santiago)
+  const inputLat = document.getElementById("input-latitud");
+  const inputLng = document.getElementById("input-longitud");
+  const inputDireccion = document.querySelector('input[name="direccion"]');
+  const inputComuna = document.querySelector('select[name="comuna"]');
+  const btnBuscar = document.getElementById("btn-geocodificar");
+  const estado = document.getElementById("geocodificar-estado");
+
+  const latInicial = parseFloat(inputLat.value);
+  const lngInicial = parseFloat(inputLng.value);
+  const tieneUbicacionInicial = !isNaN(latInicial) && !isNaN(lngInicial);
+
+  const mapa = L.map("mapa-admin").setView(
+    tieneUbicacionInicial ? [latInicial, lngInicial] : SANTIAGO_SUR,
+    tieneUbicacionInicial ? 16 : 12
+  );
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+  }).addTo(mapa);
+
+  let marcador = null;
+
+  function colocarMarcador(lat, lng) {
+    if (marcador) {
+      marcador.setLatLng([lat, lng]);
+    } else {
+      marcador = L.marker([lat, lng], { draggable: true }).addTo(mapa);
+      marcador.on("dragend", () => {
+        const pos = marcador.getLatLng();
+        inputLat.value = pos.lat.toFixed(6);
+        inputLng.value = pos.lng.toFixed(6);
+      });
+    }
+    inputLat.value = lat.toFixed(6);
+    inputLng.value = lng.toFixed(6);
+    mapa.setView([lat, lng], 16);
+  }
+
+  if (tieneUbicacionInicial) {
+    colocarMarcador(latInicial, lngInicial);
+  }
+
+  // Al hacer clic en el mapa también se puede ubicar/mover el pin manualmente.
+  mapa.on("click", (e) => colocarMarcador(e.latlng.lat, e.latlng.lng));
+
+  btnBuscar.addEventListener("click", async () => {
+    const direccion = (inputDireccion.value || "").trim();
+    if (!direccion) {
+      estado.textContent = "Escribe primero una dirección.";
+      return;
+    }
+
+    const comuna = inputComuna ? inputComuna.value : "";
+    const consulta = encodeURIComponent(`${direccion}, ${comuna}, Chile`);
+    estado.textContent = "Buscando...";
+    btnBuscar.disabled = true;
+
+    try {
+      const resp = await fetch(
+        `https://nominatim.openstreetmap.org/search?q=${consulta}&format=json&limit=1&countrycodes=cl`,
+        { headers: { "Accept-Language": "es" } }
+      );
+      const resultados = await resp.json();
+
+      if (resultados && resultados.length > 0) {
+        const { lat, lon } = resultados[0];
+        colocarMarcador(parseFloat(lat), parseFloat(lon));
+        estado.textContent = "Ubicación encontrada. Puedes arrastrar el pin para ajustarla.";
+      } else {
+        estado.textContent = "No se encontró esa dirección. Ubica el pin manualmente haciendo clic en el mapa.";
+      }
+    } catch (err) {
+      estado.textContent = "No se pudo buscar (revisa tu conexión a internet).";
+    } finally {
+      btnBuscar.disabled = false;
+    }
+  });
+})();
+</script>
+

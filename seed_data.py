@@ -13,6 +13,13 @@ liceos actualizan su oferta de especialidades año a año); cuando el sitio
 oficial 2026 estaba disponible, se priorizó sobre fuentes de directorios
 de 2021-2022 que en algunos casos mostraban especialidades descontinuadas.
 
+Las coordenadas (latitud/longitud) de estos 16 registros son APROXIMADAS
+(ubicadas en el sector correcto de cada comuna, pero no geocodificadas
+desde la dirección exacta). Se recomienda abrir cada liceo en el panel
+administrador y usar el botón "Buscar en el mapa" para afinarlas a partir
+de su dirección real; los liceos que se agreguen desde ahora en adelante
+quedan geocodificados con precisión directamente desde el formulario.
+
 Este catálogo busca reunir la totalidad de liceos técnico-profesionales
 identificables mediante fuentes públicas en cada comuna. No existe un
 listado único y consultable en línea del Ministerio de Educación filtrado
@@ -48,6 +55,8 @@ LICEOS_SEED = [
         "admision_pct": 65,
         "empleabilidad_pct": 80,
         "verificado": True,
+        "latitud": -33.528,
+        "longitud": -70.664,
     },
     {
         "nombre": "Liceo Técnico Industrial La Cisterna",
@@ -72,6 +81,8 @@ LICEOS_SEED = [
         "admision_pct": 70,
         "empleabilidad_pct": 78,
         "verificado": True,
+        "latitud": -33.5335,
+        "longitud": -70.6605,
     },
     {
         "nombre": "Liceo Polivalente Olof Palme",
@@ -96,6 +107,8 @@ LICEOS_SEED = [
         "admision_pct": 76,
         "empleabilidad_pct": 68,
         "verificado": True,
+        "latitud": -33.5265,
+        "longitud": -70.672,
     },
     {
         "nombre": "Colegio Técnico Profesional San Ramón La Cisterna",
@@ -120,6 +133,8 @@ LICEOS_SEED = [
         "admision_pct": 72,
         "empleabilidad_pct": 70,
         "verificado": True,
+        "latitud": -33.535,
+        "longitud": -70.668,
     },
     {
         "nombre": "Centro Politécnico Carlos Condell",
@@ -144,6 +159,8 @@ LICEOS_SEED = [
         "admision_pct": 69,
         "empleabilidad_pct": 76,
         "verificado": True,
+        "latitud": -33.5245,
+        "longitud": -70.659,
     },
     # ------------------------------------------------------------------ #
     # SAN RAMÓN (4 liceos)
@@ -171,6 +188,8 @@ LICEOS_SEED = [
         "admision_pct": 72,
         "empleabilidad_pct": 74,
         "verificado": True,
+        "latitud": -33.5405,
+        "longitud": -70.635,
     },
     {
         "nombre": "Liceo Comercial Vate Vicente Huidobro",
@@ -195,6 +214,8 @@ LICEOS_SEED = [
         "admision_pct": 75,
         "empleabilidad_pct": 70,
         "verificado": True,
+        "latitud": -33.536,
+        "longitud": -70.642,
     },
     {
         "nombre": "Centro Educacional Mirador",
@@ -219,6 +240,8 @@ LICEOS_SEED = [
         "admision_pct": 78,
         "empleabilidad_pct": 69,
         "verificado": True,
+        "latitud": -33.533,
+        "longitud": -70.644,
     },
     {
         "nombre": "Centro Educacional Purkuyén",
@@ -243,6 +266,8 @@ LICEOS_SEED = [
         "admision_pct": 79,
         "empleabilidad_pct": 66,
         "verificado": True,
+        "latitud": -33.544,
+        "longitud": -70.637,
     },
     # ------------------------------------------------------------------ #
     # SAN MIGUEL (3 liceos)
@@ -271,6 +296,8 @@ LICEOS_SEED = [
         "admision_pct": 68,
         "empleabilidad_pct": 76,
         "verificado": True,
+        "latitud": -33.499,
+        "longitud": -70.652,
     },
     {
         "nombre": "Liceo Politécnico San Luis",
@@ -295,6 +322,8 @@ LICEOS_SEED = [
         "admision_pct": 66,
         "empleabilidad_pct": 73,
         "verificado": True,
+        "latitud": -33.508,
+        "longitud": -70.654,
     },
     {
         "nombre": "Instituto Superior de Comercio de Chile (INSUCO)",
@@ -319,6 +348,8 @@ LICEOS_SEED = [
         "admision_pct": 71,
         "empleabilidad_pct": 72,
         "verificado": True,
+        "latitud": -33.493,
+        "longitud": -70.648,
     },
     # ------------------------------------------------------------------ #
     # LA GRANJA (2 liceos)
@@ -347,6 +378,8 @@ LICEOS_SEED = [
         "admision_pct": 70,
         "empleabilidad_pct": 75,
         "verificado": True,
+        "latitud": -33.545,
+        "longitud": -70.615,
     },
     {
         "nombre": "Liceo Bicentenario Francisco Frías Valenzuela",
@@ -372,6 +405,8 @@ LICEOS_SEED = [
         "admision_pct": 74,
         "empleabilidad_pct": 71,
         "verificado": True,
+        "latitud": -33.539,
+        "longitud": -70.622,
     },
     # ------------------------------------------------------------------ #
     # EL BOSQUE (2 liceos)
@@ -399,6 +434,8 @@ LICEOS_SEED = [
         "admision_pct": 66,
         "empleabilidad_pct": 77,
         "verificado": True,
+        "latitud": -33.564,
+        "longitud": -70.671,
     },
     {
         "nombre": "Liceo N°14 Juan Gómez Millas",
@@ -424,5 +461,7 @@ LICEOS_SEED = [
         "admision_pct": 62,
         "empleabilidad_pct": 74,
         "verificado": True,
+        "latitud": -33.559,
+        "longitud": -70.676,
     },
 ]

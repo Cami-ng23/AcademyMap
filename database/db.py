@@ -41,13 +41,25 @@ CREATE TABLE IF NOT EXISTS liceos (
     rating REAL NOT NULL DEFAULT 4.0,
     admision_pct INTEGER NOT NULL DEFAULT 60,
     empleabilidad_pct INTEGER NOT NULL DEFAULT 75,
-    verificado INTEGER NOT NULL DEFAULT 0
+    verificado INTEGER NOT NULL DEFAULT 0,
+    latitud REAL,
+    longitud REAL
 );
 
 CREATE TABLE IF NOT EXISTS resultados_quiz (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     resumen_areas TEXT NOT NULL,
     liceos_ids TEXT NOT NULL DEFAULT '',
+    creado_en TEXT NOT NULL DEFAULT (datetime('now'))
+);
+
+CREATE TABLE IF NOT EXISTS opiniones (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    texto TEXT NOT NULL,
+    estado TEXT NOT NULL DEFAULT 'pendiente',
+    motivo_moderacion TEXT NOT NULL DEFAULT '',
+    metodo_moderacion TEXT NOT NULL DEFAULT '',
+    leida INTEGER NOT NULL DEFAULT 0,
     creado_en TEXT NOT NULL DEFAULT (datetime('now'))
 );
 """

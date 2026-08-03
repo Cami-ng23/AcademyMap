@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Déjanos tu opinión sobre AcademyMap de forma completamente anónima.{% endblock %}
+
+{% block content %}
+<section class="container py-5 d-flex justify-content-center">
+  <div style="max-width: 620px; width: 100%;">
+
+    <div class="text-center mb-4">
+      <span class="am-hero-badge"><i class="bi bi-chat-heart"></i> Opiniones</span>
+      <h1 class="am-section-title">Danos tu opinión</h1>
+      <p class="text-muted-soft">
+        Es completamente anónimo — no guardamos tu nombre, correo ni ninguna
+        forma de identificarte. Cuéntanos qué te pareció el sitio, qué mejorarías,
+        o si encontraste algún dato incorrecto.
+      </p>
+    </div>
+
+    <form method="POST" class="am-card-soft p-4 p-md-5">
+      <div class="mb-3">
+        <label class="form-label small fw-semibold">Tu opinión</label>
+        <textarea name="texto" class="form-control rounded-3" rows="6" maxlength="1000" required
+                  placeholder="Escribe aquí lo que quieras contarnos..."></textarea>
+        <div class="form-text">Máximo 1000 caracteres. Los comentarios pasan por un filtro automático antes de publicarse.</div>
+      </div>
+      <button type="submit" class="btn-am-primary w-100">
+        <i class="bi bi-send me-1"></i> Enviar opinión anónima
+      </button>
+    </form>
+
+    <div class="d-flex align-items-start gap-2 mt-4 text-muted-soft small">
+      <i class="bi bi-shield-check mt-1"></i>
+      <p class="mb-0">
+        No se guarda tu IP, nombre, correo ni ningún dato que te identifique.
+        Un filtro automático revisa cada comentario antes de que llegue al
+        equipo de AcademyMap, para evitar spam o mensajes ofensivos.
+      </p>
+    </div>
+
+  </div>
+</section>
+{% endblock %}

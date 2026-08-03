@@ -15,7 +15,9 @@ from flask import (
 )
 
 from models import liceo as liceo_repo
+from models import opinion as opinion_repo
 from services.quiz_data import AREAS
+from services.moderacion import ANTHROPIC_API_KEY
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -61,6 +63,7 @@ def dashboard():
         "verificados": sum(1 for l in liceos if l.verificado),
         "demostracion": sum(1 for l in liceos if not l.verificado),
         "comunas": len({l.comuna for l in liceos}),
+        "opiniones_no_leidas": opinion_repo.contar_no_leidas(),
     }
 
     return render_template(
@@ -121,6 +124,41 @@ def eliminar(liceo_id):
     return redirect(url_for("admin.dashboard"))
 
 
+@admin_bp.route("/opiniones")
+@login_requerido
+def opiniones():
+    """
+    Lista las opiniones anónimas ya moderadas. Por defecto muestra solo las
+    aprobadas (lo que de verdad interesa leer); con ?estado=rechazada se
+    puede auditar qué filtró el moderador automático.
+    """
+    filtro_estado = request.args.get("estado", "aprobada")
+    if filtro_estado not in ("aprobada", "rechazada", ""):
+        filtro_estado = "aprobada"
+
+    lista = opinion_repo.listar(estado=filtro_estado)
+
+    # Al abrir la lista de aprobadas, se marcan como leídas (para el badge).
+    if filtro_estado == "aprobada":
+        opinion_repo.marcar_leidas([o["id"] for o in lista if not o["leida"]])
+
+    return render_template(
+        "admin/opiniones.html",
+        title="Opiniones — AcademyMap",
+        opiniones=lista,
+        filtro_estado=filtro_estado,
+        ia_configurada=bool(ANTHROPIC_API_KEY),
+    )
+
+
+@admin_bp.route("/opiniones/<int:opinion_id>/eliminar", methods=["POST"])
+@login_requerido
+def eliminar_opinion(opinion_id):
+    opinion_repo.eliminar(opinion_id)
+    flash("Opinión eliminada.", "info")
+    return redirect(url_for("admin.opiniones", estado=request.form.get("estado", "aprobada")))
+
+
 def _datos_desde_formulario() -> dict:
     """Mapea los campos del formulario (agregar/editar) a un dict para el repositorio."""
     return {
@@ -141,4 +179,16 @@ def _datos_desde_formulario() -> dict:
         "admision_pct": int(request.form.get("admision_pct") or 60),
         "empleabilidad_pct": int(request.form.get("empleabilidad_pct") or 75),
         "verificado": 1 if request.form.get("verificado") == "on" else 0,
+        "latitud": _parsear_float(request.form.get("latitud")),
+        "longitud": _parsear_float(request.form.get("longitud")),
     }
+
+
+def _parsear_float(valor):
+    """Convierte a float si hay valor, o None si viene vacío (sin ubicar en el mapa)."""
+    if valor is None or valor.strip() == "":
+        return None
+    try:
+        return float(valor)
+    except ValueError:
+        return None

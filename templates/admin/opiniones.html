@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-5">
+
+  <div class="d-flex flex-wrap justify-content-between align-items-end gap-3 mb-4">
+    <div>
+      <span class="am-hero-badge"><i class="bi bi-chat-heart"></i> Panel administrador</span>
+      <h1 class="am-section-title mb-0">Opiniones anónimas</h1>
+    </div>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn-am-outline"><i class="bi bi-arrow-left me-1"></i>Volver al panel</a>
+  </div>
+
+  {% if not ia_configurada %}
+  <div class="am-card p-3 p-md-4 mb-4 d-flex align-items-start gap-3" style="background: #fff7ed; border: none;">
+    <i class="bi bi-exclamation-triangle-fill text-warning fs-5"></i>
+    <div class="small">
+      <strong>Moderación con IA no configurada.</strong> Ahora mismo los comentarios se filtran con un
+      chequeo básico (largo, palabras prohibidas, spam repetitivo), no con inteligencia artificial.
+      Para activar la moderación con Claude, define la variable de entorno <code>ANTHROPIC_API_KEY</code>
+      antes de correr <code>python app.py</code>.
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Tabs aprobadas / rechazadas -->
+  <div class="d-flex gap-2 mb-4">
+    <a href="{{ url_for('admin.opiniones', estado='aprobada') }}"
+       class="btn-am-{{ 'primary' if filtro_estado == 'aprobada' else 'outline' }} btn-sm">
+      <i class="bi bi-check-circle me-1"></i>Aprobadas
+    </a>
+    <a href="{{ url_for('admin.opiniones', estado='rechazada') }}"
+       class="btn-am-{{ 'primary' if filtro_estado == 'rechazada' else 'outline' }} btn-sm">
+      <i class="bi bi-x-circle me-1"></i>Rechazadas (auditoría del filtro)
+    </a>
+  </div>
+
+  {% if opiniones %}
+  <div class="row g-3">
+    {% for o in opiniones %}
+    <div class="col-12">
+      <div class="am-card p-4 d-flex justify-content-between align-items-start gap-3">
+        <div>
+          <p class="mb-2">{{ o.texto }}</p>
+          <div class="d-flex flex-wrap gap-2 align-items-center">
+            <span class="small text-muted-soft"><i class="bi bi-clock me-1"></i>{{ o.creado_en }}</span>
+            <span class="am-tag" style="font-size:0.7rem;">
+              {{ 'Moderado por IA' if o.metodo_moderacion == 'ia' else 'Filtro básico' }}
+            </span>
+            {% if filtro_estado == 'rechazada' %}
+            <span class="small text-muted-soft">— {{ o.motivo_moderacion }}</span>
+            {% endif %}
+          </div>
+        </div>
+        <form method="POST" action="{{ url_for('admin.eliminar_opinion', opinion_id=o.id) }}" class="flex-shrink-0">
+          <input type="hidden" name="estado" value="{{ filtro_estado }}">
+          <button type="submit" class="btn btn-sm btn-light rounded-3 text-danger" title="Eliminar">
+            <i class="bi bi-trash"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <div class="am-card p-5 text-center">
+    <i class="bi bi-inbox fs-1 text-muted-soft mb-3 d-block"></i>
+    <p class="text-muted-soft mb-0">
+      {{ 'Todavía no hay opiniones aprobadas.' if filtro_estado == 'aprobada' else 'El filtro no ha rechazado ningún comentario.' }}
+    </p>
+  </div>
+  {% endif %}
+
+</section>
+{% endblock %}

@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+
+{% block meta_description %}Mapa interactivo de liceos técnico-profesionales en La Cisterna, San Ramón, La Granja, San Miguel y El Bosque.{% endblock %}
+
+{% block extra_head %}
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+<style>
+  #mapa-liceos { height: 70vh; min-height: 420px; border-radius: var(--am-radius-lg); border: 1px solid var(--am-border); }
+  .leaflet-popup-content { font-family: var(--font-body); min-width: 200px; }
+  .popup-liceo h6 { font-family: var(--font-display); margin-bottom: 4px; }
+</style>
+{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+
+  <div class="mb-4 d-flex flex-wrap justify-content-between align-items-end gap-3">
+    <div>
+      <span class="am-hero-badge"><i class="bi bi-map"></i> Mapa interactivo</span>
+      <h1 class="am-section-title mb-1">Liceos técnico-profesionales</h1>
+      <p class="text-muted-soft mb-0">
+        {{ total_con_ubicacion }} de {{ total_liceos }} liceos ubicados en el mapa.
+        {% if total_con_ubicacion < total_liceos %}Los restantes aún no tienen coordenadas cargadas.{% endif %}
+      </p>
+    </div>
+    <a href="{{ url_for('liceos.liceos') }}" class="btn-am-outline"><i class="bi bi-list-ul me-1"></i> Ver como lista</a>
+  </div>
+
+  <div id="mapa-liceos"></div>
+
+  <p class="small text-muted-soft mt-3 mb-0">
+    <i class="bi bi-info-circle me-1"></i>
+    Mapa con datos de © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>.
+    Algunas ubicaciones son aproximadas mientras se afinan desde el panel administrador.
+  </p>
+
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+(function () {
+  const puntos = {{ puntos_json | safe }};
+  const liceoCentrado = {{ liceo_centrado_id | default('null') }};
+
+  const mapa = L.map("mapa-liceos").setView([-33.535, -70.650], 12);
+
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+    maxZoom: 19,
+  }).addTo(mapa);
+
+  const marcadores = {};
+  const grupo = L.featureGroup().addTo(mapa);
+
+  puntos.forEach((p) => {
+    const icono = L.divIcon({
+      html: `<div style="background:${p.color}; width:30px; height:30px; border-radius:50% 50% 50% 0; transform: rotate(-45deg); display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.3); border: 2px solid white;">
+               <i class="bi ${p.icono}" style="transform: rotate(45deg); color:#fff; font-size:13px;"></i>
+             </div>`,
+      className: "",
+      iconSize: [30, 30],
+      iconAnchor: [15, 30],
+      popupAnchor: [0, -28],
+    });
+
+    const marcador = L.marker([p.lat, p.lng], { icon: icono }).addTo(grupo);
+
+    const especialidadesHtml = p.especialidades.map((e) => `<span class="am-tag" style="font-size:0.7rem;">${e}</span>`).join(" ");
+
+    marcador.bindPopup(`
+      <div class="popup-liceo">
+        <h6>${p.nombre}</h6>
+        <p class="small text-muted mb-2"><i class="bi bi-geo-alt"></i> ${p.comuna}</p>
+        <div class="mb-2">${especialidadesHtml}</div>
+        <a href="${p.url}" class="btn-am-primary btn-sm d-inline-block" style="padding:4px 12px; font-size:0.8rem;">Ver perfil</a>
+      </div>
+    `);
+
+    marcadores[p.id] = marcador;
+  });
+
+  if (puntos.length > 0) {
+    mapa.fitBounds(grupo.getBounds().pad(0.15));
+  }
+
+  // Si se llega desde "Ver en el mapa" en el perfil de un liceo (?liceo=ID),
+  // centra el mapa en ese liceo y abre su popup automáticamente.
+  if (liceoCentrado && marcadores[liceoCentrado]) {
+    mapa.setView(marcadores[liceoCentrado].getLatLng(), 16);
+    marcadores[liceoCentrado].openPopup();
+  }
+})();
+</script>
+{% endblock %}

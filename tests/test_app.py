@@ -51,6 +51,198 @@ class AcademyMapTestCase(unittest.TestCase):
         self.assertEqual(self.client.get("/sobre-el-proyecto").status_code, 200)
         self.assertEqual(self.client.get("/preguntas-frecuentes").status_code, 200)
 
+    def test_mapa_publico_carga_con_puntos(self):
+        resp = self.client.get("/mapa")
+        self.assertEqual(resp.status_code, 200)
+        html = resp.get_data(as_text=True)
+        self.assertIn("mapa-liceos", html)
+        # Los 16 liceos sembrados ya tienen coordenadas de fábrica.
+        self.assertIn('"nombre"', html)
+
+    def test_admin_formulario_incluye_mapa(self):
+        with self.client as c:
+            c.post("/admin/login", data={"usuario": "admin", "clave": "academymap2026"})
+            resp = c.get("/admin/agregar")
+            html = resp.get_data(as_text=True)
+            self.assertIn("mapa-admin", html)
+            self.assertIn("btn-geocodificar", html)
+            c.get("/admin/logout")
+
+    def test_admin_crear_liceo_con_coordenadas(self):
+        with self.client as c:
+            c.post("/admin/login", data={"usuario": "admin", "clave": "academymap2026"})
+            c.post(
+                "/admin/agregar",
+                data={
+                    "nombre": "Liceo Con Ubicación Test",
+                    "comuna": "La Cisterna",
+                    "direccion": "Calle Falsa 123",
+                    "descripcion": "Prueba de geocodificación",
+                    "especialidades": "Test",
+                    "areas": ["tecnologia"],
+                    "tipo": "Municipal",
+                    "jornada": "Diurna",
+                    "contacto": "test@test.cl",
+                    "matricula": "100",
+                    "rating": "4.5",
+                    "admision_pct": "50",
+                    "empleabilidad_pct": "80",
+                    "latitud": "-33.5300",
+                    "longitud": "-70.6650",
+                },
+                follow_redirects=True,
+            )
+
+            with self.app.app_context():
+                from models import liceo as liceo_repo
+                creado = next(
+                    l for l in liceo_repo.listar_todos()
+                    if l.nombre == "Liceo Con Ubicación Test"
+                )
+                self.assertTrue(creado.tiene_ubicacion)
+                self.assertAlmostEqual(creado.latitud, -33.5300, places=3)
+                self.assertAlmostEqual(creado.longitud, -70.6650, places=3)
+                liceo_repo.eliminar(creado.id)
+
+            c.get("/admin/logout")
+
+    def test_admin_crear_liceo_sin_coordenadas_queda_sin_ubicacion(self):
+        with self.client as c:
+            c.post("/admin/login", data={"usuario": "admin", "clave": "academymap2026"})
+            c.post(
+                "/admin/agregar",
+                data={
+                    "nombre": "Liceo Sin Ubicación Test",
+                    "comuna": "La Cisterna",
+                    "direccion": "Calle Falsa 456",
+                    "descripcion": "Prueba sin coordenadas",
+                    "especialidades": "Test",
+                    "areas": ["tecnologia"],
+                    "tipo": "Municipal",
+                    "jornada": "Diurna",
+                    "contacto": "test@test.cl",
+                    "matricula": "100",
+                    "rating": "4.5",
+                    "admision_pct": "50",
+                    "empleabilidad_pct": "80",
+                    # sin latitud/longitud, como si no se hubiera usado el buscador
+                },
+                follow_redirects=True,
+            )
+
+            with self.app.app_context():
+                from models import liceo as liceo_repo
+                creado = next(
+                    l for l in liceo_repo.listar_todos()
+                    if l.nombre == "Liceo Sin Ubicación Test"
+                )
+                self.assertFalse(creado.tiene_ubicacion)
+                # No debe aparecer entre los liceos con ubicación para el mapa.
+                ids_con_ubicacion = [l.id for l in liceo_repo.listar_con_ubicacion()]
+                self.assertNotIn(creado.id, ids_con_ubicacion)
+                liceo_repo.eliminar(creado.id)
+
+            c.get("/admin/logout")
+
+    # ------------------------------------------------------------------ #
+    # Opiniones anónimas
+    # ------------------------------------------------------------------ #
+    def test_pagina_opiniones_carga(self):
+        resp = self.client.get("/opiniones")
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn("Danos tu opinión", resp.get_data(as_text=True))
+
+    def test_enviar_opinion_valida_queda_aprobada(self):
+        # Sin ANTHROPIC_API_KEY en el entorno de tests, se usa el filtro
+        # heurístico, que aprueba comentarios normales sin groserías/spam.
+        resp = self.client.post(
+            "/opiniones",
+            data={"texto": "Me encantó el test vocacional, muy fácil de usar."},
+            follow_redirects=True,
+        )
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn("Gracias por tu opinión", resp.get_data(as_text=True))
+
+        with self.app.app_context():
+            from models import opinion as opinion_repo
+            aprobadas = opinion_repo.listar(estado="aprobada")
+            self.assertTrue(any("test vocacional" in o["texto"] for o in aprobadas))
+
+    def test_enviar_opinion_vacia_no_se_guarda(self):
+        resp = self.client.post("/opiniones", data={"texto": "   "}, follow_redirects=True)
+        self.assertIn("Escribe algo", resp.get_data(as_text=True))
+
+    def test_enviar_opinion_con_spam_queda_rechazada(self):
+        resp = self.client.post(
+            "/opiniones",
+            data={"texto": "visita www.spam-ejemplo.cl para ganar dinero ya"},
+            follow_redirects=True,
+        )
+        self.assertEqual(resp.status_code, 200)
+
+        with self.app.app_context():
+            from models import opinion as opinion_repo
+            rechazadas = opinion_repo.listar(estado="rechazada")
+            self.assertTrue(any("spam-ejemplo" in o["texto"] for o in rechazadas))
+
+    def test_admin_ve_opiniones_aprobadas_y_rechazadas(self):
+        self.client.post("/opiniones", data={"texto": "Sugerencia: agregar más liceos de Puente Alto."})
+        self.client.post("/opiniones", data={"texto": "http://spam.cl compra ahora barato"})
+
+        with self.client as c:
+            c.post("/admin/login", data={"usuario": "admin", "clave": "academymap2026"})
+
+            resp_aprobadas = c.get("/admin/opiniones?estado=aprobada")
+            self.assertEqual(resp_aprobadas.status_code, 200)
+            self.assertIn("Puente Alto", resp_aprobadas.get_data(as_text=True))
+
+            resp_rechazadas = c.get("/admin/opiniones?estado=rechazada")
+            self.assertEqual(resp_rechazadas.status_code, 200)
+            self.assertIn("spam.cl", resp_rechazadas.get_data(as_text=True))
+
+            c.get("/admin/logout")
+
+    def test_admin_puede_eliminar_opinion(self):
+        self.client.post("/opiniones", data={"texto": "Opinión de prueba para eliminar después."})
+
+        with self.app.app_context():
+            from models import opinion as opinion_repo
+            creada = next(
+                o for o in opinion_repo.listar(estado="aprobada")
+                if "eliminar después" in o["texto"]
+            )
+
+        with self.client as c:
+            c.post("/admin/login", data={"usuario": "admin", "clave": "academymap2026"})
+            resp = c.post(
+                f"/admin/opiniones/{creada['id']}/eliminar",
+                data={"estado": "aprobada"},
+                follow_redirects=True,
+            )
+            self.assertEqual(resp.status_code, 200)
+            c.get("/admin/logout")
+
+        with self.app.app_context():
+            ids_restantes = [o["id"] for o in opinion_repo.listar()]
+            self.assertNotIn(creada["id"], ids_restantes)
+
+    def test_admin_opiniones_requiere_login(self):
+        resp = self.client.get("/admin/opiniones", follow_redirects=True)
+        self.assertIn("Acceso administrador", resp.get_data(as_text=True))
+
+    def test_moderacion_heuristica_directamente(self):
+        from services.moderacion import moderar_opinion
+
+        ok = moderar_opinion("El sitio está muy bien hecho, felicitaciones al equipo.")
+        self.assertTrue(ok["aprobada"])
+        self.assertEqual(ok["metodo"], "heuristica")
+
+        corto = moderar_opinion("ok")
+        self.assertFalse(corto["aprobada"])
+
+        vacio = moderar_opinion("")
+        self.assertFalse(vacio["aprobada"])
+
     def test_robots_y_sitemap(self):
         robots = self.client.get("/robots.txt")
         self.assertEqual(robots.status_code, 200)

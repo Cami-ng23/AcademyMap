@@ -8,7 +8,8 @@
     <nav class="d-none d-md-flex align-items-center gap-1">
       <a href="{{ url_for('main.index') }}" class="am-nav-link {{ 'active' if request.endpoint == 'main.index' }}">Inicio</a>
       <a href="{{ url_for('quiz.quiz') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('quiz.') }}">Test</a>
-      <a href="{{ url_for('liceos.liceos') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('liceos.') }}">Liceos</a>
+      <a href="{{ url_for('liceos.liceos') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('liceos.') and request.endpoint != 'liceos.mapa' }}">Liceos</a>
+      <a href="{{ url_for('liceos.mapa') }}" class="am-nav-link {{ 'active' if request.endpoint == 'liceos.mapa' }}">Mapa</a>
       <a href="{{ url_for('comparador.comparar') }}" class="am-nav-link {{ 'active' if request.endpoint == 'comparador.comparar' }}">Comparar</a>
       <a href="{{ url_for('admin.dashboard') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('admin.') }}">Panel</a>
     </nav>
@@ -28,6 +29,7 @@
       <a href="{{ url_for('main.index') }}" class="am-nav-link d-block mb-1">Inicio</a>
       <a href="{{ url_for('quiz.quiz') }}" class="am-nav-link d-block mb-1">Test</a>
       <a href="{{ url_for('liceos.liceos') }}" class="am-nav-link d-block mb-1">Liceos</a>
+      <a href="{{ url_for('liceos.mapa') }}" class="am-nav-link d-block mb-1">Mapa</a>
       <a href="{{ url_for('comparador.comparar') }}" class="am-nav-link d-block mb-1">Comparar</a>
       <a href="{{ url_for('admin.dashboard') }}" class="am-nav-link d-block">Panel administrador</a>
     </div>
