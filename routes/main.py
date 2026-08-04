@@ -5,6 +5,7 @@ sitemap.xml.
 from flask import Blueprint, render_template, current_app, Response, url_for
 
 from models import liceo as liceo_repo
+from models import opinion as opinion_repo
 
 main_bp = Blueprint("main", __name__)
 
@@ -23,6 +24,7 @@ def index():
         title="AcademyMap — Encuentra el liceo técnico-profesional ideal para ti",
         estadisticas=estadisticas,
         comunas=current_app.config["COMUNAS_DISPONIBLES"],
+        testimonios=opinion_repo.aleatorias_aprobadas(limite=3),
     )
 
 

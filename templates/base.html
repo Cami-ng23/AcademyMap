@@ -18,11 +18,21 @@
   <meta name="twitter:title" content="{{ title or 'AcademyMap' }}">
   <meta name="twitter:description" content="{% block twitter_description %}Encuentra el liceo técnico-profesional ideal según tus intereses vocacionales.{% endblock %}">
 
-  <!-- Bootstrap 5 + Iconos -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  <!-- Bootstrap 5 + Iconos: usa la copia local (static/vendor/) si ya se
+       descargó con scripts/descargar_dependencias.py; si no, cae al CDN. -->
+  {% if VENDOR.bootstrap_css %}
+    <link href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}" rel="stylesheet">
+  {% else %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  {% endif %}
+  {% if VENDOR.bootstrap_icons_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons.min.css') }}">
+  {% else %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  {% endif %}
 
-  <!-- Tipografías -->
+  <!-- Tipografías (requieren internet la primera vez que carga cada dispositivo;
+       si no hay conexión, el sitio usa una tipografía del sistema como respaldo) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 
@@ -53,7 +63,11 @@
 
   {% include "components/footer.html" %}
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  {% if VENDOR.bootstrap_js %}
+    <script src="{{ url_for('static', filename='vendor/bootstrap.bundle.min.js') }}"></script>
+  {% else %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  {% endif %}
   <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   {% block extra_scripts %}{% endblock %}
 </body>

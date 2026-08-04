@@ -150,6 +150,41 @@ El campo `verificado` del modelo `Liceo` y la insignia correspondiente en
 la interfaz se mantienen para que, si en el futuro se agrega un liceo sin
 confirmar, quede claramente diferenciado de los datos reales.
 
+## Funcionar sin internet (recomendado para el día de la feria)
+
+Bootstrap, sus íconos y el mapa (Leaflet) se cargan desde internet (CDN)
+por defecto. Para que el sitio funcione aunque el wifi del lugar falle,
+corre esto UNA vez, con internet:
+
+```bash
+python scripts/descargar_dependencias.py
+```
+
+Esto descarga esas librerías a `static/vendor/`. Desde ese momento, la app
+detecta automáticamente los archivos locales y los usa en vez del CDN —
+sin tener que cambiar nada más. Si nunca corres el script, el sitio sigue
+funcionando igual, cargando todo desde internet como antes.
+
+> Las tipografías de Google Fonts siguen necesitando internet la primera
+> vez que carga cada dispositivo (no se pueden auto-hospedar fácilmente).
+> Si no hay conexión, el sitio usa una tipografía del sistema como
+> respaldo — se ve un poco distinto, pero nada se rompe.
+
+## Otras mejoras de calidad
+
+- **Página de error personalizada:** si algo falla inesperadamente, se
+  muestra una página con el estilo del sitio (no el error feo de Flask
+  por defecto), y el error queda registrado en `logs/academymap.log` para
+  poder revisarlo después de una presentación en vivo.
+- **Límite de intentos (rate limiting):** máximo 5 opiniones cada 10
+  minutos por IP, y máximo 5 intentos de login del admin cada 5 minutos,
+  para frenar spam y fuerza bruta sin depender de librerías externas.
+- **Testimonios en la portada:** la landing muestra 3 opiniones aprobadas
+  al azar como prueba social (solo aparecen si ya hay opiniones
+  aprobadas).
+- **Números animados en el hero:** las estadísticas de la portada cuentan
+  desde 0 hasta su valor real al cargar la página.
+
 ## Mapa interactivo
 
 `/mapa` muestra todos los liceos con coordenadas cargadas en un mapa

@@ -10,6 +10,7 @@ from flask import Blueprint, render_template, request, flash, redirect, url_for
 
 from models import opinion as opinion_repo
 from services.moderacion import moderar_opinion
+from services import rate_limit
 
 opiniones_bp = Blueprint("opiniones", __name__)
 
@@ -17,6 +18,11 @@ opiniones_bp = Blueprint("opiniones", __name__)
 @opiniones_bp.route("/opiniones", methods=["GET", "POST"])
 def opiniones():
     if request.method == "POST":
+        clave_intento = f"opinion:{request.remote_addr}"
+        if not rate_limit.permitir(clave_intento, max_intentos=5, ventana_segundos=600):
+            flash("Enviaste varias opiniones seguidas. Espera un momento antes de enviar otra.", "warning")
+            return redirect(url_for("opiniones.opiniones"))
+
         texto = request.form.get("texto", "").strip()
 
         if not texto:

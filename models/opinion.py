@@ -28,6 +28,15 @@ def listar(estado: str = "") -> list:
     return [dict(f) for f in filas]
 
 
+def aleatorias_aprobadas(limite: int = 3) -> list:
+    """Opiniones aprobadas al azar, para mostrar como testimonios en la landing."""
+    filas = get_db().execute(
+        "SELECT * FROM opiniones WHERE estado = 'aprobada' ORDER BY RANDOM() LIMIT ?",
+        (limite,),
+    ).fetchall()
+    return [dict(f) for f in filas]
+
+
 def contar_no_leidas() -> int:
     fila = get_db().execute(
         "SELECT COUNT(*) AS total FROM opiniones WHERE estado = 'aprobada' AND leida = 0"

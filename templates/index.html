@@ -23,15 +23,15 @@
         </div>
         <div class="d-flex gap-4 mt-5 flex-wrap">
           <div>
-            <div class="am-stat-number">{{ estadisticas.liceos }}</div>
+            <div class="am-stat-number" data-count="{{ estadisticas.liceos }}">0</div>
             <div class="text-muted-soft small">Liceos catalogados</div>
           </div>
           <div>
-            <div class="am-stat-number">{{ estadisticas.comunas }}</div>
+            <div class="am-stat-number" data-count="{{ estadisticas.comunas }}">0</div>
             <div class="text-muted-soft small">Comunas cubiertas</div>
           </div>
           <div>
-            <div class="am-stat-number">{{ estadisticas.especialidades }}</div>
+            <div class="am-stat-number" data-count="{{ estadisticas.especialidades }}">0</div>
             <div class="text-muted-soft small">Especialidades técnicas</div>
           </div>
         </div>
@@ -153,6 +153,27 @@
   </div>
 </section>
 
+{% if testimonios %}
+<!-- ===================== TESTIMONIOS ===================== -->
+<section class="container py-5">
+  <div class="text-center mb-5">
+    <span class="am-hero-badge"><i class="bi bi-chat-heart"></i> Opiniones reales</span>
+    <h2 class="am-section-title">Esto opinan otros estudiantes</h2>
+    <p class="text-muted-soft">Comentarios anónimos enviados por quienes ya usaron AcademyMap.</p>
+  </div>
+  <div class="row g-4">
+    {% for t in testimonios %}
+    <div class="col-md-4">
+      <div class="am-card p-4 h-100">
+        <i class="bi bi-quote fs-3 text-am-primary"></i>
+        <p class="text-muted-soft mb-0" style="min-height: 60px;">{{ t.texto }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
 <!-- ===================== CTA FINAL ===================== -->
 <section class="container py-5">
   <div class="am-card-soft p-5 text-center" style="background: linear-gradient(135deg, var(--am-primary), #7c3aed); color: #fff; border: none;">
@@ -166,4 +187,23 @@
   </div>
 </section>
 
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // Animación de conteo de los números del hero (0 -> valor real).
+  document.querySelectorAll(".am-stat-number[data-count]").forEach((el) => {
+    const destino = parseInt(el.dataset.count, 10) || 0;
+    const duracion = 1200;
+    const inicio = performance.now();
+
+    function paso(ahora) {
+      const progreso = Math.min((ahora - inicio) / duracion, 1);
+      const facil = 1 - Math.pow(1 - progreso, 3); // ease-out cubic
+      el.textContent = Math.round(facil * destino);
+      if (progreso < 1) requestAnimationFrame(paso);
+    }
+    requestAnimationFrame(paso);
+  });
+</script>
 {% endblock %}

@@ -38,6 +38,8 @@ class AcademyMapTestCase(unittest.TestCase):
 
     def setUp(self):
         self.client = self.app.test_client()
+        from services import rate_limit
+        rate_limit.reiniciar()
 
     # ------------------------------------------------------------------ #
     # Páginas públicas
@@ -229,6 +231,61 @@ class AcademyMapTestCase(unittest.TestCase):
     def test_admin_opiniones_requiere_login(self):
         resp = self.client.get("/admin/opiniones", follow_redirects=True)
         self.assertIn("Acceso administrador", resp.get_data(as_text=True))
+
+    # ------------------------------------------------------------------ #
+    # Límite de intentos (rate limiting)
+    # ------------------------------------------------------------------ #
+    def test_rate_limit_opiniones(self):
+        for i in range(5):
+            resp = self.client.post("/opiniones", data={"texto": f"Comentario válido número {i} para probar el límite."})
+            self.assertEqual(resp.status_code, 302)
+
+        # El 6to envío en poco tiempo debería quedar bloqueado por el límite.
+        resp_bloqueado = self.client.post(
+            "/opiniones",
+            data={"texto": "Este séptimo comentario no debería guardarse."},
+            follow_redirects=True,
+        )
+        self.assertIn("Espera un momento", resp_bloqueado.get_data(as_text=True))
+
+        with self.app.app_context():
+            from models import opinion as opinion_repo
+            self.assertFalse(any(
+                "séptimo comentario" in o["texto"] for o in opinion_repo.listar()
+            ))
+
+    def test_rate_limit_login_admin(self):
+        for _ in range(5):
+            self.client.post("/admin/login", data={"usuario": "admin", "clave": "mala"})
+
+        resp = self.client.post(
+            "/admin/login",
+            data={"usuario": "admin", "clave": "academymap2026"},  # incluso la correcta
+            follow_redirects=True,
+        )
+        self.assertIn("Demasiados intentos", resp.get_data(as_text=True))
+
+    # ------------------------------------------------------------------ #
+    # Testimonios en la landing
+    # ------------------------------------------------------------------ #
+    def test_testimonios_aparecen_en_landing(self):
+        self.client.post("/opiniones", data={"texto": "Comentario de prueba para salir como testimonio."})
+        resp = self.client.get("/")
+        self.assertEqual(resp.status_code, 200)
+        # No siempre sale este comentario específico (son 3 al azar), pero la
+        # sección debe existir si hay al menos una opinión aprobada.
+        self.assertIn("Esto opinan otros estudiantes", resp.get_data(as_text=True))
+
+    # ------------------------------------------------------------------ #
+    # Página de error 500 y fallback de dependencias locales (vendor)
+    # ------------------------------------------------------------------ #
+    def test_pagina_500_personalizada_registrada(self):
+        self.assertIn(500, self.app.error_handler_spec[None])
+
+    def test_vendor_usa_cdn_cuando_no_hay_archivos_locales(self):
+        resp = self.client.get("/")
+        html = resp.get_data(as_text=True)
+        self.assertIn("cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap", html)
 
     def test_moderacion_heuristica_directamente(self):
         from services.moderacion import moderar_opinion

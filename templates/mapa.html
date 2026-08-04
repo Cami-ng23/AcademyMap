@@ -3,7 +3,11 @@
 {% block meta_description %}Mapa interactivo de liceos técnico-profesionales en La Cisterna, San Ramón, La Granja, San Miguel y El Bosque.{% endblock %}
 
 {% block extra_head %}
+{% if VENDOR.leaflet_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet.css') }}">
+{% else %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+{% endif %}
 <style>
   #mapa-liceos { height: 70vh; min-height: 420px; border-radius: var(--am-radius-lg); border: 1px solid var(--am-border); }
   .leaflet-popup-content { font-family: var(--font-body); min-width: 200px; }
@@ -38,7 +42,11 @@
 {% endblock %}
 
 {% block extra_scripts %}
+{% if VENDOR.leaflet_js %}
+<script src="{{ url_for('static', filename='vendor/leaflet.js') }}"></script>
+{% else %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+{% endif %}
 <script>
 (function () {
   const puntos = {{ puntos_json | safe }};

@@ -147,8 +147,16 @@
 </div>
 
 <!-- Leaflet (mapa interactivo) + geocodificación de direcciones con Nominatim (OpenStreetMap) -->
+{% if VENDOR.leaflet_css %}
+<link rel="stylesheet" href="{{ url_for('static', filename='vendor/leaflet.css') }}">
+{% else %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+{% endif %}
+{% if VENDOR.leaflet_js %}
+<script src="{{ url_for('static', filename='vendor/leaflet.js') }}"></script>
+{% else %}
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+{% endif %}
 <script>
 (function () {
   const SANTIAGO_SUR = [-33.535, -70.650]; // centro por defecto (sur de Santiago)

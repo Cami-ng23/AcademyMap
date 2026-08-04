@@ -18,6 +18,7 @@ from models import liceo as liceo_repo
 from models import opinion as opinion_repo
 from services.quiz_data import AREAS
 from services.moderacion import ANTHROPIC_API_KEY
+from services import rate_limit
 
 admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
 
@@ -35,6 +36,12 @@ def login_requerido(vista):
 @admin_bp.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
+        clave_intento = f"login:{request.remote_addr}"
+        if not rate_limit.permitir(clave_intento, max_intentos=5, ventana_segundos=300):
+            espera = rate_limit.segundos_restantes(clave_intento, 300)
+            flash(f"Demasiados intentos. Espera {espera // 60 + 1} minuto(s) y vuelve a intentar.", "danger")
+            return render_template("admin/login.html", title="Acceso administrador — AcademyMap")
+
         usuario = request.form.get("usuario", "")
         clave = request.form.get("clave", "")
         if usuario == current_app.config["ADMIN_USERNAME"] and clave == current_app.config["ADMIN_PASSWORD"]:

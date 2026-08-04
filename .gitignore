@@ -4,3 +4,5 @@ database/academymap.db
 .env
 .venv/
 venv/
+static/vendor/
+logs/
