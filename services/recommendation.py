@@ -65,6 +65,38 @@ def porcentajes_por_area(puntajes: dict) -> dict:
     return dict(sorted(resultado.items(), key=lambda kv: kv[1], reverse=True))
 
 
+def calcular_puntajes_avanzado(respuestas_likert: dict, respuestas_escenarios: dict) -> dict:
+    """
+    Puntaje del Diagnóstico Vocacional Avanzado (services/quiz_avanzado_data.py):
+    - respuestas_likert: {"auto_electricidad": "4", ...} valores del 1 al 5.
+    - respuestas_escenarios: {"esc_1": "b", ...} letra de la alternativa elegida.
+
+    Cada afirmación de autoevaluación aporta directamente su valor (1-5) al
+    área que mide. Cada escenario elegido aporta 4 puntos al área de la
+    alternativa seleccionada (se pondera más alto porque implica comparar
+    varias opciones a la vez, no solo declarar una preferencia aislada).
+    """
+    from services.quiz_avanzado_data import AUTOEVALUACION, ESCENARIOS
+
+    puntajes = defaultdict(int)
+
+    for item in AUTOEVALUACION:
+        try:
+            valor = int(respuestas_likert.get(item["id"], 3))
+        except (TypeError, ValueError):
+            valor = 3
+        valor = max(1, min(5, valor))
+        puntajes[item["area"]] += valor
+
+    for escenario in ESCENARIOS:
+        letra_elegida = respuestas_escenarios.get(escenario["id"])
+        for opcion in escenario["opciones"]:
+            if opcion["letra"] == letra_elegida:
+                puntajes[opcion["area"]] += 4
+
+    return dict(sorted(puntajes.items(), key=lambda kv: kv[1], reverse=True))
+
+
 def recomendar_liceos(liceos: list, puntajes: dict, limite: int = 6) -> list:
     """
     liceos: lista de objetos Liceo (o dicts con clave 'areas' -> lista de ids)

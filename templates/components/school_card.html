@@ -3,13 +3,23 @@
 {% set area_info = AREAS.get(area_principal) if area_principal else None %}
 
 <div class="am-card h-100 d-flex flex-column">
+  {% if liceo.imagen %}
+  <div class="am-school-header" style="background-image: url('{{ liceo.imagen }}'); background-size: cover; background-position: center;">
+    <span class="am-badge-comuna">{{ liceo.comuna }}</span>
+    <span class="am-badge-verificado {{ 'bg-success text-white' if liceo.verificado else 'bg-warning text-dark' }}">
+      {{ 'Verificado' if liceo.verificado else 'Demostración' }}
+    </span>
+  </div>
+  {% else %}
   <div class="am-school-header" style="background: linear-gradient(135deg, {{ area_info.color if area_info else '#4f46e5' }}, #1e1b3a);">
     <span class="am-badge-comuna">{{ liceo.comuna }}</span>
     <span class="am-badge-verificado {{ 'bg-success text-white' if liceo.verificado else 'bg-warning text-dark' }}">
       {{ 'Verificado' if liceo.verificado else 'Demostración' }}
     </span>
     <i class="bi {{ area_info.icono if area_info else 'bi-mortarboard' }}"></i>
+    <div class="am-school-header-pattern"></div>
   </div>
+  {% endif %}
 
   <div class="p-4 d-flex flex-column flex-grow-1">
     <div class="d-flex justify-content-between align-items-start mb-2">

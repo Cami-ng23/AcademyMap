@@ -61,6 +61,20 @@ class AcademyMapTestCase(unittest.TestCase):
         # Los 16 liceos sembrados ya tienen coordenadas de fábrica.
         self.assertIn('"nombre"', html)
 
+    def test_mapa_sin_liceo_especifico_no_produce_none_invalido_en_js(self):
+        """
+        Regresión: sin ?liceo=ID, `liceo_centrado_json` debe renderizar como
+        `null` (válido en JS), no como `None` (Python) — ese bug dejaba el
+        mapa completamente en blanco por un error de JavaScript.
+        """
+        html = self.client.get("/mapa").get_data(as_text=True)
+        self.assertIn("const liceoCentrado = null;", html)
+        self.assertNotIn("= None;", html)
+
+    def test_mapa_con_liceo_especifico_en_query(self):
+        html = self.client.get("/mapa?liceo=1").get_data(as_text=True)
+        self.assertIn("const liceoCentrado = 1;", html)
+
     def test_admin_formulario_incluye_mapa(self):
         with self.client as c:
             c.post("/admin/login", data={"usuario": "admin", "clave": "academymap2026"})
@@ -279,6 +293,102 @@ class AcademyMapTestCase(unittest.TestCase):
     # ------------------------------------------------------------------ #
     # Página de error 500 y fallback de dependencias locales (vendor)
     # ------------------------------------------------------------------ #
+    # ------------------------------------------------------------------ #
+    # Diagnóstico Vocacional Avanzado
+    # ------------------------------------------------------------------ #
+    def test_intro_diagnostico_avanzado_carga(self):
+        resp = self.client.get("/diagnostico-vocacional/")
+        self.assertEqual(resp.status_code, 200)
+        self.assertIn("Diagnóstico Vocacional Avanzado", resp.get_data(as_text=True))
+
+    def test_formulario_avanzado_tiene_todas_las_secciones(self):
+        resp = self.client.get("/diagnostico-vocacional/formulario")
+        html = resp.get_data(as_text=True)
+        self.assertEqual(len(set(re.findall(r'name="(auto_\w+)"', html))), 8)
+        self.assertEqual(len(set(re.findall(r'name="(esc_\d)"', html))), 5)
+        self.assertEqual(len(set(re.findall(r'name="(abierta_\d)"', html))), 4)
+
+    def test_diagnostico_avanzado_completo(self):
+        datos = {
+            "auto_electricidad": "5", "auto_industrial": "4", "auto_salud": "2",
+            "auto_gastronomia": "2", "auto_administracion": "3", "auto_construccion": "2",
+            "auto_tecnologia": "5", "auto_parvulos": "1",
+            "esc_1": "a", "esc_2": "b", "esc_3": "a", "esc_4": "c", "esc_5": "d",
+            "abierta_1": "Una vez arreglé el enchufe de mi casa.",
+            "abierta_2": "Programar en el computador.",
+            "abierta_3": "Trabajando con tecnología.",
+            "abierta_4": "Un poco nervioso pero con ganas.",
+        }
+        with self.client as c:
+            c.get("/diagnostico-vocacional/formulario")
+            resp = c.post("/diagnostico-vocacional/diagnostico", data=datos)
+            self.assertEqual(resp.status_code, 200)
+            html = resp.get_data(as_text=True)
+            self.assertIn("Tecnología e Informática", html)
+            self.assertIn("Sistema de Admisión Escolar", html)
+            self.assertIn("sistemadeadmisionescolar.cl", html)
+            self.assertIn("Una vez arreglé el enchufe", html)
+
+    def test_diagnostico_avanzado_incompleto_redirige(self):
+        resp = self.client.post("/diagnostico-vocacional/diagnostico", data={"auto_electricidad": "5"})
+        self.assertEqual(resp.status_code, 302)
+
+    def test_cta_diagnostico_avanzado_en_resultados_quiz_corto(self):
+        with self.client as c:
+            html = c.get("/quiz").get_data(as_text=True)
+            ids = sorted(set(re.findall(r'name="(q\d+)"', html)))
+            data = {qid: "0" for qid in ids}
+            resp = c.post("/resultados", data=data, follow_redirects=True)
+            self.assertIn("diagnostico-vocacional", resp.get_data(as_text=True))
+
+    # ------------------------------------------------------------------ #
+    # Acceso admin discreto
+    # ------------------------------------------------------------------ #
+    def test_boton_login_discreto_sin_mencionar_panel(self):
+        html = self.client.get("/").get_data(as_text=True)
+        self.assertIn("am-login-discreto", html)
+        self.assertNotIn(">Panel<", html)
+        self.assertNotIn("Panel administrador", html)
+
+    # ------------------------------------------------------------------ #
+    # Imagen del liceo
+    # ------------------------------------------------------------------ #
+    def test_admin_puede_guardar_imagen_del_liceo(self):
+        with self.client as c:
+            c.post("/admin/login", data={"usuario": "admin", "clave": "academymap2026"})
+            c.post(
+                "/admin/agregar",
+                data={
+                    "nombre": "Liceo Con Imagen Test",
+                    "comuna": "La Cisterna",
+                    "direccion": "Calle Falsa 789",
+                    "descripcion": "Prueba de imagen",
+                    "especialidades": "Test",
+                    "areas": ["tecnologia"],
+                    "tipo": "Municipal",
+                    "jornada": "Diurna",
+                    "contacto": "test@test.cl",
+                    "matricula": "100",
+                    "rating": "4.5",
+                    "admision_pct": "50",
+                    "empleabilidad_pct": "80",
+                    "imagen": "https://ejemplo.cl/foto.jpg",
+                },
+                follow_redirects=True,
+            )
+            with self.app.app_context():
+                from models import liceo as liceo_repo
+                creado = next(l for l in liceo_repo.listar_todos() if l.nombre == "Liceo Con Imagen Test")
+                self.assertEqual(creado.imagen, "https://ejemplo.cl/foto.jpg")
+                nuevo_id = creado.id
+
+            resp_detalle = c.get(f"/liceo/{nuevo_id}")
+            self.assertIn("ejemplo.cl/foto.jpg", resp_detalle.get_data(as_text=True))
+
+            with self.app.app_context():
+                liceo_repo.eliminar(nuevo_id)
+            c.get("/admin/logout")
+
     def test_pagina_500_personalizada_registrada(self):
         self.assertIn(500, self.app.error_handler_spec[None])
 

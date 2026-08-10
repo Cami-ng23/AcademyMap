@@ -6,6 +6,7 @@ Registro centralizado de blueprints. app.py solo llama a register_routes(app).
 def register_routes(app):
     from .main import main_bp
     from .quiz import quiz_bp
+    from .quiz_avanzado import quiz_avanzado_bp
     from .liceos import liceos_bp
     from .comparador import comparador_bp
     from .admin import admin_bp
@@ -13,6 +14,7 @@ def register_routes(app):
 
     app.register_blueprint(main_bp)
     app.register_blueprint(quiz_bp)
+    app.register_blueprint(quiz_avanzado_bp)
     app.register_blueprint(liceos_bp)
     app.register_blueprint(comparador_bp)
     app.register_blueprint(admin_bp)

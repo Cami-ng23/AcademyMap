@@ -93,5 +93,19 @@
       Ver todos los liceos <i class="bi bi-arrow-right ms-1"></i>
     </a>
   </div>
+
+  <!-- CTA al diagnóstico avanzado -->
+  <div class="am-card-soft p-4 p-md-5 text-center mt-5" style="background: #1e3a5f; border: none;">
+    <i class="bi bi-clipboard-data fs-2 mb-2 d-block" style="color: #b8934a;"></i>
+    <h4 style="color: #fff;">¿Quieres un diagnóstico más completo?</h4>
+    <p class="mb-4" style="color: rgba(255,255,255,0.8); max-width: 480px; margin-inline: auto;">
+      Este test rápido te da una primera idea. Si quieres un perfil más
+      detallado —con escenarios de decisión y preguntas abiertas— prueba
+      nuestro Diagnóstico Vocacional Avanzado.
+    </p>
+    <a href="{{ url_for('quiz_avanzado.intro') }}" target="_blank" class="btn btn-light rounded-3 fw-semibold px-4 py-2">
+      Probar diagnóstico avanzado <i class="bi bi-box-arrow-up-right ms-1"></i>
+    </a>
+  </div>
 </section>
 {% endblock %}

@@ -1,0 +1,56 @@
+{% extends "base_pro.html" %}
+
+{% block content %}
+<section class="container py-5" style="max-width: 760px;">
+
+  <div class="text-center mb-5">
+    <span class="badge rounded-pill mb-3" style="background: var(--pro-primary); padding: 6px 16px;">
+      <i class="bi bi-clipboard-data me-1"></i> Diagnóstico Vocacional Avanzado
+    </span>
+    <h1 class="mb-3">Un perfil vocacional más completo</h1>
+    <p style="color: var(--pro-ink-soft); font-size: 1.08rem;">
+      Este diagnóstico es más extenso y riguroso que el test rápido de la página
+      principal. Combina una autoevaluación, escenarios de decisión y preguntas
+      abiertas de reflexión, para entregarte un perfil más detallado antes de postular.
+    </p>
+  </div>
+
+  <div class="am-pro-card p-4 p-md-5 mb-4">
+    <h4 class="mb-4">Qué incluye</h4>
+    <div class="row g-4">
+      <div class="col-md-4">
+        <i class="bi bi-sliders am-pro-accent fs-3 mb-2 d-block"></i>
+        <h6>Autoevaluación</h6>
+        <p class="small" style="color: var(--pro-ink-soft);">8 afirmaciones que calificas del 1 al 5, una por cada área vocacional.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="bi bi-signpost-split am-pro-accent fs-3 mb-2 d-block"></i>
+        <h6>Escenarios</h6>
+        <p class="small" style="color: var(--pro-ink-soft);">5 situaciones donde debes elegir entre alternativas con matices reales.</p>
+      </div>
+      <div class="col-md-4">
+        <i class="bi bi-pencil-square am-pro-accent fs-3 mb-2 d-block"></i>
+        <h6>Reflexión personal</h6>
+        <p class="small" style="color: var(--pro-ink-soft);">4 preguntas abiertas para contar en tus propias palabras.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="am-pro-card p-4 p-md-5 mb-5 d-flex align-items-start gap-3">
+    <i class="bi bi-shield-check am-pro-accent fs-4"></i>
+    <p class="small mb-0" style="color: var(--pro-ink-soft);">
+      No se guarda ningún dato personal identificable. Tus respuestas se usan
+      solo para calcular tu diagnóstico y se descartan al cerrar la sesión —
+      no quedan asociadas a tu nombre, correo ni ninguna otra información tuya.
+    </p>
+  </div>
+
+  <div class="text-center">
+    <a href="{{ url_for('quiz_avanzado.formulario') }}" class="btn-pro-primary d-inline-flex align-items-center gap-2 px-5 py-3">
+      Comenzar diagnóstico <i class="bi bi-arrow-right"></i>
+    </a>
+    <p class="small mt-3" style="color: var(--pro-ink-soft);"><i class="bi bi-clock me-1"></i>Toma entre 8 y 12 minutos</p>
+  </div>
+
+</section>
+{% endblock %}

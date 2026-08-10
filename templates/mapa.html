@@ -50,7 +50,7 @@
 <script>
 (function () {
   const puntos = {{ puntos_json | safe }};
-  const liceoCentrado = {{ liceo_centrado_id | default('null') }};
+  const liceoCentrado = {{ liceo_centrado_json | safe }};
 
   const mapa = L.map("mapa-liceos").setView([-33.535, -70.650], 12);
 
@@ -99,6 +99,15 @@
     mapa.setView(marcadores[liceoCentrado].getLatLng(), 16);
     marcadores[liceoCentrado].openPopup();
   }
+
+  // Leaflet a veces calcula mal el tamaño del mapa si el contenedor no
+  // tenía su tamaño final definido en el momento en que se inicializó
+  // (layouts con Bootstrap, fuentes cargando, etc.), dejando el mapa
+  // "en blanco" hasta que alguien interactúa. Se fuerza un recálculo
+  // apenas termina de cargar todo, y también si la ventana cambia de tamaño.
+  window.addEventListener("load", () => mapa.invalidateSize());
+  setTimeout(() => mapa.invalidateSize(), 200);
+  window.addEventListener("resize", () => mapa.invalidateSize());
 })();
 </script>
 {% endblock %}

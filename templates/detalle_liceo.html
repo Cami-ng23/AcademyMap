@@ -6,7 +6,14 @@
 {% set area_principal = liceo.lista_areas[0] if liceo.lista_areas else None %}
 {% set area_info = AREAS.get(area_principal) if area_principal else None %}
 
-<section class="py-5" style="background: linear-gradient(135deg, {{ area_info.color if area_info else '#4f46e5' }}, #1e1b3a);">
+<section class="py-5" style="
+  {% if liceo.imagen %}
+    background: linear-gradient(135deg, rgba(30,58,95,0.72), rgba(20,20,30,0.82)), url('{{ liceo.imagen }}');
+    background-size: cover; background-position: center;
+  {% else %}
+    background: linear-gradient(135deg, {{ area_info.color if area_info else '#4f46e5' }}, #1e1b3a);
+  {% endif %}
+">
   <div class="container py-4">
     <a href="{{ url_for('liceos.liceos') }}" class="d-inline-flex align-items-center gap-1 mb-3" style="color: rgba(255,255,255,0.85);">
       <i class="bi bi-arrow-left"></i> Volver al explorador

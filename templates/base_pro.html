@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ title or "Diagnóstico Vocacional Avanzado — AcademyMap" }}</title>
+  <meta name="description" content="{% block meta_description %}Diagnóstico vocacional avanzado de AcademyMap: un perfil más completo con preguntas cerradas y abiertas antes de postular a tu liceo técnico-profesional.{% endblock %}">
+  <link rel="icon" type="image/svg+xml" href="{{ url_for('static', filename='img/favicon.svg') }}">
+
+  {% if VENDOR.bootstrap_css %}
+    <link href="{{ url_for('static', filename='vendor/bootstrap.min.css') }}" rel="stylesheet">
+  {% else %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/css/bootstrap.min.css" rel="stylesheet">
+  {% endif %}
+  {% if VENDOR.bootstrap_icons_css %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='vendor/bootstrap-icons.min.css') }}">
+  {% else %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.3/font/bootstrap-icons.min.css">
+  {% endif %}
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Source+Serif+4:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="am-pro" style="padding-top: 0;">
+
+  <header class="am-pro-header">
+    <div class="container d-flex justify-content-between align-items-center flex-wrap gap-2">
+      <a href="{{ url_for('quiz_avanzado.intro') }}" class="am-pro-logo">
+        <i class="bi bi-award"></i> AcademyMap <span class="am-pro-accent">| Diagnóstico Vocacional</span>
+      </a>
+      <div class="d-flex align-items-center gap-2">
+        <span class="am-pro-badge"><i class="bi bi-shield-check me-1"></i>Sin datos personales</span>
+        <a href="{{ url_for('main.index') }}" class="small" style="color: rgba(255,255,255,0.8);">
+          Volver al sitio principal <i class="bi bi-box-arrow-up-right ms-1"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="container mt-3">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'danger' if category == 'danger' else category }} alert-dismissible fade show rounded-3" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="text-center py-4 mt-5 small" style="color: var(--pro-ink-soft); border-top: 1px solid var(--pro-border);">
+    AcademyMap · Diagnóstico Vocacional Avanzado · No sustituye una orientación vocacional profesional presencial.
+  </footer>
+
+  {% if VENDOR.bootstrap_js %}
+    <script src="{{ url_for('static', filename='vendor/bootstrap.bundle.min.js') }}"></script>
+  {% else %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.3/js/bootstrap.bundle.min.js"></script>
+  {% endif %}
+  {% block extra_scripts %}{% endblock %}
+</body>
+</html>

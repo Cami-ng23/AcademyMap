@@ -11,12 +11,14 @@
       <a href="{{ url_for('liceos.liceos') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('liceos.') and request.endpoint != 'liceos.mapa' }}">Liceos</a>
       <a href="{{ url_for('liceos.mapa') }}" class="am-nav-link {{ 'active' if request.endpoint == 'liceos.mapa' }}">Mapa</a>
       <a href="{{ url_for('comparador.comparar') }}" class="am-nav-link {{ 'active' if request.endpoint == 'comparador.comparar' }}">Comparar</a>
-      <a href="{{ url_for('admin.dashboard') }}" class="am-nav-link {{ 'active' if request.endpoint and request.endpoint.startswith('admin.') }}">Panel</a>
     </nav>
 
     <div class="d-flex align-items-center gap-2">
       <a href="{{ url_for('quiz.quiz') }}" class="btn-am-primary d-none d-sm-inline-flex align-items-center">
         Iniciar test
+      </a>
+      <a href="{{ url_for('admin.login') }}" class="am-login-discreto d-none d-sm-inline-flex" aria-label="Iniciar sesión" title="Iniciar sesión">
+        <i class="bi bi-person-circle"></i>
       </a>
       <button id="am-menu-toggle" class="btn btn-light d-md-none rounded-3" aria-label="Abrir menú">
         <i class="bi bi-list fs-4"></i>
@@ -31,7 +33,7 @@
       <a href="{{ url_for('liceos.liceos') }}" class="am-nav-link d-block mb-1">Liceos</a>
       <a href="{{ url_for('liceos.mapa') }}" class="am-nav-link d-block mb-1">Mapa</a>
       <a href="{{ url_for('comparador.comparar') }}" class="am-nav-link d-block mb-1">Comparar</a>
-      <a href="{{ url_for('admin.dashboard') }}" class="am-nav-link d-block">Panel administrador</a>
+      <a href="{{ url_for('admin.login') }}" class="am-nav-link d-block small text-muted-soft">Iniciar sesión</a>
     </div>
   </div>
 </header>

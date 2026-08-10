@@ -178,7 +178,7 @@ def _datos_desde_formulario() -> dict:
         "caracteristicas": request.form.get("caracteristicas", "").strip(),
         "tipo": request.form.get("tipo", "Municipal"),
         "jornada": request.form.get("jornada", "Diurna"),
-        "imagen": "",
+        "imagen": request.form.get("imagen", "").strip(),
         "contacto": request.form.get("contacto", "").strip(),
         "gratuito": 1 if request.form.get("gratuito") == "on" else 0,
         "matricula": int(request.form.get("matricula") or 0),

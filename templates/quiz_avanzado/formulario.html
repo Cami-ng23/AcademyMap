@@ -1,0 +1,93 @@
+{% extends "base_pro.html" %}
+
+{% block content %}
+<section class="container py-5" style="max-width: 820px;">
+
+  <div class="mb-5">
+    <span class="badge rounded-pill mb-2" style="background: var(--pro-primary); padding: 5px 14px;">Formulario</span>
+    <h1 class="mb-2">Diagnóstico Vocacional Avanzado</h1>
+    <p style="color: var(--pro-ink-soft);">Responde con calma. No hay respuestas correctas o incorrectas.</p>
+  </div>
+
+  <form method="POST" action="{{ url_for('quiz_avanzado.diagnostico') }}" id="form-avanzado">
+
+    <!-- ===================== PARTE 1: AUTOEVALUACIÓN ===================== -->
+    <div class="am-pro-card p-4 p-md-5 mb-4">
+      <h4 class="mb-1"><span class="am-pro-accent">Parte 1</span> · Autoevaluación</h4>
+      <p class="small mb-4" style="color: var(--pro-ink-soft);">Indica qué tan de acuerdo estás con cada afirmación.</p>
+
+      {% for item in autoevaluacion %}
+      <div class="mb-4 {{ 'pb-4' if not loop.last }}" style="{{ 'border-bottom: 1px solid var(--pro-border);' if not loop.last }}">
+        <p class="mb-2 fw-semibold">{{ loop.index }}. {{ item.texto }}</p>
+        <div class="am-likert">
+          {% for op in opciones_likert %}
+          <div>
+            <input type="radio" id="{{ item.id }}_{{ op.valor }}" name="{{ item.id }}" value="{{ op.valor }}" {{ 'checked' if op.valor == 3 }}>
+            <label for="{{ item.id }}_{{ op.valor }}">{{ op.texto }}</label>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- ===================== PARTE 2: ESCENARIOS ===================== -->
+    <div class="am-pro-card p-4 p-md-5 mb-4">
+      <h4 class="mb-1"><span class="am-pro-accent">Parte 2</span> · Escenarios de decisión</h4>
+      <p class="small mb-4" style="color: var(--pro-ink-soft);">Elige la alternativa que más se acerque a lo que harías.</p>
+
+      {% for escenario in escenarios %}
+      <div class="mb-4 {{ 'pb-2' if not loop.last }}">
+        <p class="mb-3 fw-semibold">{{ loop.index }}. {{ escenario.texto }}</p>
+        {% for opcion in escenario.opciones %}
+        <label class="am-pro-option">
+          <input type="radio" name="{{ escenario.id }}" value="{{ opcion.letra }}" class="am-pro-option-input">
+          <strong>{{ opcion.letra }})</strong> {{ opcion.texto }}
+        </label>
+        {% endfor %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <!-- ===================== PARTE 3: PREGUNTAS ABIERTAS ===================== -->
+    <div class="am-pro-card p-4 p-md-5 mb-4">
+      <h4 class="mb-1"><span class="am-pro-accent">Parte 3</span> · Reflexión personal</h4>
+      <p class="small mb-4" style="color: var(--pro-ink-soft);">Responde con tus propias palabras — no hay largo mínimo ni máximo exigido, aunque unas pocas frases ya ayudan mucho.</p>
+
+      {% for pregunta in preguntas_abiertas %}
+      <div class="mb-4">
+        <label class="fw-semibold mb-2 d-block">{{ loop.index }}. {{ pregunta.texto }}</label>
+        <textarea name="{{ pregunta.id }}" class="form-control" rows="3" maxlength="800" required
+                  placeholder="{{ pregunta.placeholder }}"></textarea>
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="text-center">
+      <button type="submit" class="btn-pro-primary px-5 py-3">
+        <i class="bi bi-clipboard-check me-2"></i>Ver mi diagnóstico
+      </button>
+    </div>
+  </form>
+
+</section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  document.querySelectorAll(".am-pro-option-input").forEach((input) => {
+    input.addEventListener("change", () => {
+      document.querySelectorAll(`input[name="${input.name}"]`).forEach((i) => {
+        i.closest(".am-pro-option").classList.remove("selected");
+      });
+      input.closest(".am-pro-option").classList.add("selected");
+    });
+  });
+
+  document.getElementById("form-avanzado").addEventListener("submit", (e) => {
+    const boton = e.target.querySelector("button[type=submit]");
+    boton.disabled = true;
+    boton.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Calculando diagnóstico...';
+  });
+</script>
+{% endblock %}

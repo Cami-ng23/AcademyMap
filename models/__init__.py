@@ -1,5 +1,1 @@
-"""Expone el modelo y el repositorio de liceos como `models.liceo`."""
-from . import liceo  # noqa: F401
-from . import resultado  # noqa: F401
-from . import opinion  # noqa: F401
-from .liceo import Liceo  # noqa: F401
+"""Paquete de modelos (cada submódulo expone su propio repositorio: liceo, resultado, opinion)."""

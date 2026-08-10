@@ -1,0 +1,97 @@
+{% extends "base_pro.html" %}
+
+{% block content %}
+<section class="container py-5" style="max-width: 860px;">
+
+  <div class="text-center mb-5">
+    <span class="badge rounded-pill mb-3" style="background: var(--pro-primary); padding: 6px 16px;">
+      <i class="bi bi-clipboard-data me-1"></i> Tu diagnóstico
+    </span>
+    <h1 class="mb-2">Diagnóstico Vocacional Avanzado</h1>
+    <p style="color: var(--pro-ink-soft);">Resultado basado en tu autoevaluación, escenarios y reflexión personal.</p>
+  </div>
+
+  <!-- Áreas principales -->
+  <div class="row g-3 mb-4">
+    {% for area in top_areas %}
+    <div class="col-md-4">
+      <div class="am-pro-card p-4 h-100 text-center">
+        <i class="bi {{ area.icono }} fs-3 mb-2 d-block am-pro-accent"></i>
+        <h6 class="mb-1">{{ area.nombre }}</h6>
+        <p class="small mb-0" style="color: var(--pro-ink-soft);">{{ area.descripcion }}</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  {% if sintesis_ia %}
+  <div class="am-pro-card p-4 p-md-5 mb-4" style="border-left: 4px solid var(--pro-accent);">
+    <h5 class="mb-3"><i class="bi bi-stars am-pro-accent me-2"></i>Síntesis de tu perfil</h5>
+    <p class="mb-0" style="color: var(--pro-ink-soft); line-height: 1.7;">{{ sintesis_ia }}</p>
+  </div>
+  {% endif %}
+
+  <!-- Desglose completo -->
+  <div class="am-pro-card p-4 p-md-5 mb-4">
+    <h5 class="mb-4">Desglose por área</h5>
+    {% for area in resumen_areas %}
+    <div class="mb-3">
+      <div class="d-flex justify-content-between mb-1">
+        <span class="small fw-semibold">{{ area.nombre }}</span>
+        <span class="small" style="color: var(--pro-ink-soft);">{{ area.porcentaje }}%</span>
+      </div>
+      <div style="height: 8px; border-radius: 999px; background: var(--pro-border); overflow: hidden;">
+        <div style="height:100%; width: {{ area.porcentaje }}%; background: var(--pro-primary); border-radius: 999px;"></div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Reflexiones -->
+  <div class="am-pro-card p-4 p-md-5 mb-4">
+    <h5 class="mb-4"><i class="bi bi-pencil-square am-pro-accent me-2"></i>Tu reflexión personal</h5>
+    {% for r in reflexiones %}
+    <div class="mb-4 {{ 'pb-4' if not loop.last }}" style="{{ 'border-bottom: 1px solid var(--pro-border);' if not loop.last }}">
+      <p class="small fw-semibold mb-1" style="color: var(--pro-ink-soft);">{{ r.pregunta }}</p>
+      <p class="mb-0">"{{ r.respuesta }}"</p>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Liceos recomendados -->
+  {% if recomendados %}
+  <div class="am-pro-card p-4 p-md-5 mb-4">
+    <h5 class="mb-4"><i class="bi bi-mortarboard am-pro-accent me-2"></i>Liceos que calzan con tu perfil</h5>
+    <div class="row g-3">
+      {% for liceo in recomendados[:4] %}
+      <div class="col-md-6">
+        <a href="{{ url_for('liceos.detalle_liceo', liceo_id=liceo.id) }}" target="_blank"
+           class="d-block p-3 rounded-3 text-decoration-none" style="border: 1px solid var(--pro-border); color: var(--pro-ink);">
+          <strong class="small d-block mb-1">{{ liceo.nombre }}</strong>
+          <span class="small" style="color: var(--pro-ink-soft);">{{ liceo.comuna }} · {{ liceo.especialidades.split(',')[0] }}</span>
+        </a>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- CTA: postular oficialmente -->
+  <div class="am-pro-card p-4 p-md-5 text-center" style="background: linear-gradient(135deg, var(--pro-primary), var(--pro-primary-dark)); color: #fff; border: none;">
+    <i class="bi bi-send-check fs-2 mb-3 d-block" style="color: var(--pro-accent);"></i>
+    <h4 style="color: #fff;">¿Listo/a para postular?</h4>
+    <p class="mb-4" style="color: rgba(255,255,255,0.82); max-width: 480px; margin-inline: auto;">
+      La postulación oficial a liceos en Chile se hace a través del Sistema de
+      Admisión Escolar (SAE) del Ministerio de Educación.
+    </p>
+    <a href="{{ sae_url }}" target="_blank" rel="noopener" class="btn btn-light rounded-3 fw-semibold px-4 py-2">
+      Ir al Sistema de Admisión Escolar <i class="bi bi-box-arrow-up-right ms-1"></i>
+    </a>
+  </div>
+
+  <p class="text-center small mt-4" style="color: var(--pro-ink-soft);">
+    <i class="bi bi-info-circle me-1"></i>Este diagnóstico es una herramienta de apoyo y no sustituye una orientación vocacional profesional presencial.
+  </p>
+
+</section>
+{% endblock %}

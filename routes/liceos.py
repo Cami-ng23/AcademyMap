@@ -84,5 +84,5 @@ def mapa():
         puntos_json=json.dumps(puntos),
         total_con_ubicacion=len(liceos_geo),
         total_liceos=total_liceos,
-        liceo_centrado_id=liceo_centrado_id,
+        liceo_centrado_json=json.dumps(liceo_centrado_id),
     )

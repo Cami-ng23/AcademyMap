@@ -58,6 +58,48 @@ También se pueden auditar las rechazadas (`?estado=rechazada`) para
 revisar qué filtró el moderador. El panel avisa con un aviso amarillo si
 la IA no está configurada.
 
+## Acceso administrador (discreto)
+
+El acceso al panel ya no aparece como un link visible tipo "Panel" en el
+menú — para no anunciarle a cualquier visitante que existe una sección de
+administración. Se accede desde un ícono pequeño (👤) en la esquina
+superior derecha del sitio, o directamente en `/admin/login`.
+
+## Diagnóstico Vocacional Avanzado
+
+Además del test rápido de la portada (10 de 50 preguntas al azar), existe
+un segundo cuestionario más extenso y formal en `/diagnostico-vocacional`,
+pensado para quienes quieren un perfil más completo antes de postular:
+
+- **Autoevaluación** (8 afirmaciones, escala 1-5, una por área).
+- **Escenarios de decisión** (5 situaciones con alternativas que implican
+  comparar varias opciones a la vez, no solo declarar una preferencia).
+- **Preguntas abiertas** (4 preguntas de reflexión personal en texto libre).
+
+Al final se genera un diagnóstico con el desglose completo por área, las
+respuestas abiertas mostradas como parte del perfil, liceos recomendados,
+y un botón para ir a postular al **Sistema de Admisión Escolar (SAE)**
+oficial del Mineduc (`sistemadeadmisionescolar.cl`).
+
+Este cuestionario usa un tema visual distinto (navy + dorado, tipografía
+serif para los títulos) para diferenciarse claramente del test rápido —
+se abre en una pestaña nueva desde el botón al final de los resultados
+del test rápido.
+
+Si hay `ANTHROPIC_API_KEY` configurada (ver sección de Opiniones más
+abajo), el diagnóstico agrega además un párrafo de síntesis generado con
+IA que conecta las respuestas abiertas con las áreas de mayor puntaje. Sin
+la clave, el diagnóstico se genera igual de completo, solo sin ese párrafo
+extra.
+
+## Imágenes de los liceos
+
+Cada liceo puede tener una imagen (URL) cargada desde el panel
+administrador, con vista previa en vivo mientras se escribe el link. Si un
+liceo no tiene imagen cargada, se usa automáticamente una ilustración con
+degradado + ícono según su área vocacional principal — así ningún liceo
+se ve "vacío" mientras no se cargan fotos reales.
+
 ## Ejecutar las pruebas automatizadas
 
 El proyecto incluye una suite de pruebas con `unittest` (librería estándar

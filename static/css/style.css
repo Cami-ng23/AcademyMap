@@ -136,6 +136,21 @@ a { text-decoration: none; }
 }
 .btn-am-outline:hover { border-color: var(--am-primary); color: var(--am-primary); }
 
+/* Botón de acceso discreto (no dice "admin" ni "panel" a la vista) */
+.am-login-discreto {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--am-ink-soft);
+  font-size: 1.15rem;
+  background: transparent;
+  transition: all 0.18s ease;
+}
+.am-login-discreto:hover { background: var(--am-primary-light); color: var(--am-primary); }
+
 /* ---------------------------------------------------------------------- */
 /* Hero                                                                    */
 /* ---------------------------------------------------------------------- */
@@ -223,6 +238,18 @@ a { text-decoration: none; }
   position: absolute;
   inset: 0;
   background: radial-gradient(circle at 80% -10%, rgba(255,255,255,0.35), transparent 55%);
+}
+.am-school-header-pattern {
+  position: absolute;
+  inset: 0;
+  opacity: 0.18;
+  background-image: radial-gradient(circle, #fff 1.5px, transparent 1.5px);
+  background-size: 18px 18px;
+}
+.am-school-header i {
+  position: relative;
+  z-index: 1;
+  filter: drop-shadow(0 4px 10px rgba(0,0,0,0.25));
 }
 
 .am-badge-comuna {
@@ -437,7 +464,139 @@ a { text-decoration: none; }
 }
 
 /* ---------------------------------------------------------------------- */
-/* Impresión (comparador -> "Exportar a PDF" usa el diálogo nativo)       */
+/* =========================================================================
+   Tema "profesional" — Diagnóstico Vocacional Avanzado
+   Paleta distinta (navy + dorado) a propósito, para que se sienta como una
+   herramienta más formal/seria que el test rápido (azul índigo juguetón).
+   ========================================================================= */
+.am-pro {
+  --pro-primary: #1e3a5f;
+  --pro-primary-dark: #14283f;
+  --pro-accent: #b8934a;
+  --pro-bg: #f7f6f3;
+  --pro-card: #ffffff;
+  --pro-border: #e3e1da;
+  --pro-ink: #1c2430;
+  --pro-ink-soft: #5b6472;
+
+  background: var(--pro-bg);
+  min-height: 100vh;
+  color: var(--pro-ink);
+  font-family: var(--font-body);
+}
+
+.am-pro h1, .am-pro h2, .am-pro h3, .am-pro h4 {
+  font-family: "Source Serif 4", Georgia, serif;
+  font-weight: 600;
+  color: var(--pro-ink);
+}
+
+.am-pro-header {
+  background: linear-gradient(135deg, var(--pro-primary), var(--pro-primary-dark));
+  color: #fff;
+  padding: 22px 0;
+}
+.am-pro-header a.am-pro-logo {
+  color: #fff;
+  font-family: "Source Serif 4", Georgia, serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+.am-pro-header .am-pro-badge {
+  background: rgba(255,255,255,0.14);
+  color: #f1e6cf;
+  border: 1px solid rgba(255,255,255,0.25);
+  border-radius: 999px;
+  padding: 4px 14px;
+  font-size: 0.76rem;
+  font-weight: 600;
+}
+
+.am-pro-card {
+  background: var(--pro-card);
+  border: 1px solid var(--pro-border);
+  border-radius: 16px;
+  box-shadow: 0 6px 24px rgba(30, 58, 95, 0.06);
+}
+
+.btn-pro-primary {
+  background: var(--pro-primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  padding: 12px 26px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-pro-primary:hover { background: var(--pro-primary-dark); color: #fff; }
+
+.btn-pro-outline {
+  background: transparent;
+  border: 1.5px solid var(--pro-border);
+  color: var(--pro-ink);
+  border-radius: 10px;
+  padding: 11px 24px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-pro-outline:hover { border-color: var(--pro-primary); color: var(--pro-primary); }
+
+.am-pro-accent { color: var(--pro-accent); }
+
+/* Escala Likert */
+.am-likert {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-top: 10px;
+}
+.am-likert label {
+  border: 1.5px solid var(--pro-border);
+  border-radius: 10px;
+  padding: 12px 6px;
+  text-align: center;
+  font-size: 0.76rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  color: var(--pro-ink-soft);
+}
+.am-likert label:hover { border-color: var(--pro-primary); }
+.am-likert input { display: none; }
+.am-likert input:checked + label,
+.am-likert label.selected {
+  border-color: var(--pro-primary);
+  background: var(--pro-primary);
+  color: #fff;
+}
+
+.am-pro-option {
+  display: block;
+  border: 1.5px solid var(--pro-border);
+  border-radius: 12px;
+  padding: 16px 18px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: #fff;
+}
+.am-pro-option:hover { border-color: var(--pro-primary); }
+.am-pro-option.selected { border-color: var(--pro-primary); background: #f0f4f8; }
+.am-pro-option input { display: none; }
+
+.am-pro textarea.form-control {
+  border: 1.5px solid var(--pro-border);
+  border-radius: 12px;
+}
+.am-pro textarea.form-control:focus {
+  border-color: var(--pro-primary);
+  box-shadow: 0 0 0 3px rgba(30, 58, 95, 0.12);
+}
+
+/* =========================================================================
+   Impresión (comparador -> "Exportar a PDF" usa el diálogo nativo)       */
 /* ---------------------------------------------------------------------- */
 @media print {
   .am-navbar, .am-footer, .no-print, #am-mobile-menu { display: none !important; }
