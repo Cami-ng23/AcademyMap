@@ -1,3 +1,5 @@
+agregar simce 
+
 # AcademyMap
 
 Plataforma de orientación vocacional técnico-profesional para estudiantes de
